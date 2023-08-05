@@ -7,9 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run :
-        working-directory : ./backend
+    env : 
+      working-directory : ./backend
     
     steps:
     - uses: actions/checkout@v3
@@ -21,12 +20,11 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew build
-
-    - name : print
-      run : ls
+      working-directory : ${{ env.working-directory }} 
 
     - name: Run Tests
       run: ./gradlew test
+      working-directory : ${{ env.working-directory }} 
 
     - name: Check Test Results
       run: |
