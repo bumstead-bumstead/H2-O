@@ -2,8 +2,7 @@ name: Java Gradle Test
 
 on:
   pull_request:
-    branches:
-      - "ci-test-main"
+    branches: [ ci-test-main ]
 
 jobs:
   build:
