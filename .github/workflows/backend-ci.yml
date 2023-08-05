@@ -1,8 +1,8 @@
-name: Java Gradle Test
+name: gradle-CI
 
 on:
   pull_request:
-    branches: 'ci-test-main'
+    branches: 'dev-be'
 
 jobs:
   build:
@@ -25,10 +25,3 @@ jobs:
       - name: Run Tests
         run: ./gradlew test
         working-directory : ${{ env.working-directory }}
-
-      - name: Check Test Results
-        run: |
-          if [ ${{ job.status }} == "failure" ]; then
-            echo "Tests failed. PR cannot be merged."
-            exit 1
-          fi
