@@ -2,7 +2,7 @@ name: release server application
 
 on:
   push:
-    branches: 'main'
+    branches: 'dev-be'
 
 jobs:
   release:
