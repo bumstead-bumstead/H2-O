@@ -8,6 +8,8 @@ spring:
 mybatis:
   type-aliases-package: com.h2o.h2oServer.domain
   mapper-locations: static/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
 
 server:
   port: 8080
