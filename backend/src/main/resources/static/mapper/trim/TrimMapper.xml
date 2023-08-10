@@ -25,6 +25,12 @@
         where car_id = #{id}
     </select>
 
+    <select id="findImages" resultType="ImageEntity">
+        select id, image
+        from trims_image
+        where trim_id = #{id}
+    </select>
+
     <select id="showTables" resultType="string">
         SHOW TABLES
     </select>
