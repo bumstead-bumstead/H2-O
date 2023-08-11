@@ -122,7 +122,7 @@ class TrimMapperTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("유효한 trim에 대해서, externalColorEntity를 반환한다.")
     @Sql("classpath:db/external-color-data.sql")
     void findExternalColor() {
         //given
@@ -148,7 +148,7 @@ class TrimMapperTest {
         //then
         assertThat(actualExternalColorEntities).as("유효한 데이터가 매핑된다.").isNotEmpty();
         assertThat(actualExternalColorEntities).as("유효한 데이터가 매핑된다.").hasSize(2);
-        softly.assertThat(actualExternalColorEntities).as("CarId에 해당하는 trim 객체가 모두 매핑되었는지 확인")
+        softly.assertThat(actualExternalColorEntities).as("trimId에 해당하는 externalColorEntity 객체가 모두 매핑되었는지 확인")
                 .contains(expectedExternalColorEntity1)
                 .contains(expectedExternalColorEntity2);
         softly.assertAll();
