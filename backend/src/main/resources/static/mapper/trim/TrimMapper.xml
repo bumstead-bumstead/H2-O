@@ -46,5 +46,6 @@
         from external_color
             join trims_external_color on external_color.id = trims_external_color.external_color_id
         where trim_id = #{id}
+        order by choice_ratio desc
     </select>
 </mapper>
