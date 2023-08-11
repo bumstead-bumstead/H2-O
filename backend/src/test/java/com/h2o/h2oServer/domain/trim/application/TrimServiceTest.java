@@ -75,6 +75,60 @@ class TrimServiceTest {
         softly.assertAll();
     }
 
+    @Test
+    @DisplayName("존재하는 externalColor에 대한 요청인 경우, Dto로 포매팅해서 반환한다.")
+    void findExternalColorInformation() {
+        //given
+        Long trimId = 1L;
+        when(trimMapper.findExternalColor(trimId)).thenReturn(generateExternalColorEntityList());
+        when(externalColorMapper.findImages(1L)).thenReturn(generateImageEntityList());
+        when(externalColorMapper.findImages(2L)).thenReturn(generateImageEntityList());
+
+        //when
+        List<ExternalColorDto> actualExternalColorDtos = trimService.findExternalColorInformation(trimId);
+
+        //then
+        softly.assertThat(actualExternalColorDtos).as("null이 아니다.").isNotNull();
+        softly.assertThat(actualExternalColorDtos).as("ExternalColorDtos를 두 개 포함한다.").hasSize(2);
+        softly.assertThat(actualExternalColorDtos.get(0).getImages()).as("Images를 포함한다.").isNotNull();
+        softly.assertThat(actualExternalColorDtos.get(0).getName()).as("name 필드를 포함한다.").isNotNull();
+        softly.assertAll();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 externalColor에 대한 요청인 경우, 빈 리스트를 반환한다.")
+    void findExternalColorInformationNotExist() {
+        //given
+        Long trimId = 1L;
+        when(trimMapper.findExternalColor(trimId)).thenReturn(List.of());
+
+        //when
+        List<ExternalColorDto> actualExternalColorDtos = trimService.findExternalColorInformation(trimId);
+
+        //then
+        softly.assertThat(actualExternalColorDtos).as("null이 아니다.").isNotNull();
+        softly.assertThat(actualExternalColorDtos).as("ExternalColorDto를 포함하지 않는다.").isEmpty();
+        softly.assertAll();
+    }
+
+    private static List<ExternalColorEntity> generateExternalColorEntityList() {
+        return List.of(
+                ExternalColorEntity.builder()
+                        .id(1L)
+                        .name("Red")
+                        .colorCode("#FF0000")
+                        .choiceRatio(0.5F)
+                        .price(100)
+                        .build(),
+                ExternalColorEntity.builder()
+                        .id(2L)
+                        .name("Black")
+                        .colorCode("#FF0001")
+                        .choiceRatio(0.2F)
+                        .price(240)
+                        .build());
+    }
+
     private static List<ImageEntity> generateImageEntityList() {
         return List.of(
                 ImageEntity.builder()
