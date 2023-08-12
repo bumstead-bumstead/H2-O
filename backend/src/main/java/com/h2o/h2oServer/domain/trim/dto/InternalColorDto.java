@@ -10,7 +10,7 @@ import lombok.Getter;
 public class InternalColorDto {
     private Long id;
     private String name;
-    private Float choiceRatio;
+    private Integer choiceRatio;
     private Integer price;
     private String fabricImage;
     private String bannerImage;
@@ -19,7 +19,7 @@ public class InternalColorDto {
         return InternalColorDto.builder()
                 .id(internalColorEntity.getId())
                 .name(internalColorEntity.getName())
-                .choiceRatio(internalColorEntity.getChoiceRatio())
+                .choiceRatio(Math.round(internalColorEntity.getChoiceRatio() * 100))
                 .price(internalColorEntity.getPrice())
                 .fabricImage(internalColorEntity.getFabricImage())
                 .bannerImage(internalColorEntity.getInternalImage())
