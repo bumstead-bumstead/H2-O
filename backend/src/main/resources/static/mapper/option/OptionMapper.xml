@@ -8,4 +8,12 @@
             join trims_options on trims_options.option_id = options.id
         where trims_options.trim_id = #{trimId} and options.id = #{optionId}
     </select>
+
+    <select id="findHashTag" resultType="HashTagEntity">
+        select hashtag.name
+        from options
+                 join options_hashtag on options.id = options_hashtag.option_id
+                 join hashtag on hashtag.id = options_hashtag.hashtag_id
+        where options.id = #{optionId}
+    </select>
 </mapper>

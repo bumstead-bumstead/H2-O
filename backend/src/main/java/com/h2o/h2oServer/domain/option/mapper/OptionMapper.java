@@ -9,4 +9,5 @@ import java.util.List;
 @Mapper
 public interface OptionMapper {
     OptionEntity findOption(Long optionId, Long trimId);
+    List<HashTagEntity> findHashTag(Long optionId);
 }
