@@ -11,4 +11,6 @@ public interface PackageMapper {
     PackageEntity findPackage(Long trimId, Long packageId);
 
     List<HashTagEntity> findHashTag(Long packageId);
+
+    List<Long> findOptionComponent(Long packageId);
 }

@@ -16,4 +16,10 @@
                  join hashtag on hashtag.id = package_hashtag.hashtag_id
         where package.id = #{packageId}
     </select>
+
+    <select id="findOptionComponent" resultType="long">
+        select option_id
+        from package_options
+        where package_id = #{packageId}
+    </select>
 </mapper>
