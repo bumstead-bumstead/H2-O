@@ -3,13 +3,13 @@ package com.h2o.h2oServer.domain.option.dto;
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
 import com.h2o.h2oServer.domain.option.entity.OptionEntity;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
-@Getter
+@Data
 public class OptionDetailsDto {
     private String name;
     private String category;

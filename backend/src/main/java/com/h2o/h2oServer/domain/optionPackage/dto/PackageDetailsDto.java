@@ -5,11 +5,13 @@ import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
 import com.h2o.h2oServer.domain.option.entity.enums.HashTag;
 import com.h2o.h2oServer.domain.optionPackage.entity.PackageEntity;
 import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
+@Data
 public class PackageDetailsDto {
     private String name;
     private String category;
