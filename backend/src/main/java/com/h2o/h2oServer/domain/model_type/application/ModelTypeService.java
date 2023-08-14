@@ -25,7 +25,7 @@ public class ModelTypeService {
         return ModelTypeDto.of(findPowertrains(carId), findBodytypes(carId), findDrivetrains(carId));
     }
 
-    public List<CarPowertrainDto> findPowertrains(Long carId) {
+    private List<CarPowertrainDto> findPowertrains(Long carId) {
         List<CarPowerTrainEntity> powertrainEntities = powerTrainMapper.findPowertrainsByCarId(carId);
 
         return powertrainEntities.stream()
@@ -42,12 +42,12 @@ public class ModelTypeService {
         return CarPowertrainDto.of(powertrain, output, torque);
     }
 
-    public List<CarBodytypeDto> findBodytypes(Long carId) {
+    private List<CarBodytypeDto> findBodytypes(Long carId) {
         List<CarBodytypeEntity> bodytypes = bodyTypeMapper.findBodytypesByCarId(carId);
         return CarBodytypeDto.listOf(bodytypes);
     }
 
-    public List<CarDrivetrainDto> findDrivetrains(Long carId) {
+    private List<CarDrivetrainDto> findDrivetrains(Long carId) {
         List<CarDrivetrainEntity> drivetrains = driveTrainMapper.findDrivetrainsByCarId(carId);
         return CarDrivetrainDto.listOf(drivetrains);
     }
