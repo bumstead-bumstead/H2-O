@@ -42,18 +42,36 @@
 
     <!--쿼리 최적화 필요-->
     <select id="findExternalColor" resultType="ExternalColorEntity">
-        select id, name, color_code, choice_ratio, price
-        from external_color
-            join trims_external_color on external_color.id = trims_external_color.external_color_id
-        where trim_id = #{id}
-        order by choice_ratio desc
+        <include refid="findExternalColor"/>
     </select>
 
     <select id="findInternalColor" resultType="InternalColorEntity">
+        <include refid="findInternalColor"/>
+    </select>
+
+    <select id="findDefaultExternalColor" resultType="ExternalColorEntity">
+        <include refid="findExternalColor"/>
+        limit 1
+    </select>
+
+    <select id="findDefaultInternalColor" resultType="InternalColorEntity">
+        <include refid="findInternalColor"/>
+        limit 1
+    </select>
+
+    <sql id="findInternalColor">
         select id, name, fabric_image, internal_image, price, choice_ratio
         from internal_color
                  join trims_internal_color on internal_color.id = trims_internal_color.internal_color_id
         where trim_id = #{id}
-            order by choice_ratio desc, name desc
-    </select>
+        order by choice_ratio desc, name desc
+    </sql>
+
+    <sql id="findExternalColor">
+        select id, name, color_code, choice_ratio, price
+        from external_color
+                 join trims_external_color on external_color.id = trims_external_color.external_color_id
+        where trim_id = #{id}
+        order by choice_ratio desc, name desc
+    </sql>
 </mapper>
