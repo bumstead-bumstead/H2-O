@@ -5,8 +5,8 @@
     <select id="findPackage" resultType="PackageEntity">
         select name, category, price, choice_ratio
         from package
-        join trims_package on trims_package.package_id = package.id
-        where trims_package.trim_id = #{trimId} and package.id = #{optionId}
+            join trims_package on trims_package.package_id = package.id
+        where trims_package.trim_id = #{trimId} and trims_package.package_id = #{packageId}
     </select>
 
     <select id="findHashTag" resultType="HashTagEntity">
