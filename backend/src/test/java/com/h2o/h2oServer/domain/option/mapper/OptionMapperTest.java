@@ -34,6 +34,8 @@ class OptionMapperTest {
                 .choiceRatio(0.3f)
                 .useCount(12.5f)
                 .category(OptionCategory.POWERTRAIN_PERFORMANCE)
+                .price(500)
+                .optionType("default")
                 .build();
 
         //when

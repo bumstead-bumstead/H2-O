@@ -17,6 +17,8 @@ public class OptionDetailsDto {
     private String image;
     private String description;
     private OptionStatisticsDto hmgData;
+    private Integer price;
+    private boolean containsHmgData;
 
     public static OptionDetailsDto of(OptionEntity optionEntity, List<HashTagEntity> hashTagEntities) {
         return OptionDetailsDto.builder()
@@ -29,6 +31,12 @@ public class OptionDetailsDto {
                 .description(optionEntity.getDescription())
                 .hmgData(OptionStatisticsDto.of(optionEntity.getChoiceRatio(),
                         optionEntity.getUseCount()))
+                .price(optionEntity.getPrice())
+                .containsHmgData(containsHmgData(optionEntity))
                 .build();
+    }
+
+    private static boolean containsHmgData(OptionEntity optionEntity) {
+        return optionEntity.getChoiceRatio() != null;
     }
 }

@@ -13,4 +13,6 @@ public class OptionEntity {
     private OptionCategory category;
     private Float useCount;
     private Float choiceRatio;
+    private Integer price;
+    private String optionType;
 }
