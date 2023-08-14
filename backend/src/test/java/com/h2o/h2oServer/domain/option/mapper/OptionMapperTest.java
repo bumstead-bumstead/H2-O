@@ -22,7 +22,7 @@ class OptionMapperTest {
 
     @Test
     @DisplayName("존재하는 trim, option에 대해서 유효한 OptionEntity 객체를 반환한다.")
-    @Sql("classpath:db/option-data.sql")
+    @Sql("classpath:db/option/option-data.sql")
     void findOption() {
         //given
         Long trimId = 1L;
@@ -49,7 +49,7 @@ class OptionMapperTest {
 
     @Test
     @DisplayName("존재하는 option에 대해서 유효한 HashTagEntity 객체를 반환한다.")
-    @Sql("classpath:db/hashtag-data.sql")
+    @Sql("classpath:db/option/hashtag-data.sql")
     void findHashTag() {
         //given
         Long optionId = 1L;
@@ -64,6 +64,7 @@ class OptionMapperTest {
                         .name(HashTag.SPORTS)
                         .build()
         );
+
         //when
         List<HashTagEntity> actualHashTagEntities = optionMapper.findHashTag(optionId);
 

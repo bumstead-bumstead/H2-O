@@ -22,7 +22,7 @@ class PackageMapperTest {
 
     @Test
     @DisplayName("존재하는 trim, package에 대해서 유효한 PackageEntity 객체를 반환한다.")
-    @Sql("classpath:db/package-data.sql")
+    @Sql("classpath:db/optionPackage/package-data.sql")
     void findPackage() {
         //given
         Long packageId = 1L;
@@ -45,7 +45,7 @@ class PackageMapperTest {
 
     @Test
     @DisplayName("존재하는 package에 대해서 유효한 HashTagEntity 객체를 반환한다.")
-    @Sql("classpath:db/package-hashtag-data.sql")
+    @Sql("classpath:db/optionPackage/package-hashtag-data.sql")
     void findHashTag() {
         //given
         Long packageId = 1L;

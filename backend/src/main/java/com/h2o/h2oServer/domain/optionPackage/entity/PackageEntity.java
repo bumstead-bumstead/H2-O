@@ -7,7 +7,6 @@ import lombok.Data;
 @Builder
 @Data
 public class PackageEntity {
-    private Long id;
     private String name;
     private OptionCategory category;
     private Integer price;
