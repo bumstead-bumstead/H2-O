@@ -22,4 +22,6 @@ public interface TrimMapper {
     List<InternalColorEntity> findInternalColor(Long id);
 
     List<ExternalColorEntity> findExternalColor(Long id);
+
+    Integer findMaximumComponentPrice(Long id);
 }
