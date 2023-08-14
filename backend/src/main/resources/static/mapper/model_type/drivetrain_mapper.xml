@@ -12,6 +12,7 @@
     <select id="findDrivetrainsByCarId" resultType="CarDrivetrainEntity">
         <include refid="findDrivetrainsByCarId"/>
     </select>
+
     <select id="findDefaultDrivetrainByCarId" resultType="CarDrivetrainEntity">
         <include refid="findDrivetrainsByCarId"/>
         limit 1
