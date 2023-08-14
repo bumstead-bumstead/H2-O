@@ -1,7 +1,7 @@
 package com.h2o.h2oServer.domain.optionPackage.application;
 
 import com.h2o.h2oServer.domain.option.application.OptionService;
-import com.h2o.h2oServer.domain.option.dto.OptionDetailsDto;
+import com.h2o.h2oServer.domain.option.dto.OptionDto;
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
 import com.h2o.h2oServer.domain.option.entity.enums.HashTag;
 import com.h2o.h2oServer.domain.option.entity.enums.OptionCategory;
@@ -43,11 +43,11 @@ class PackageServiceTest {
         when(packageMapper.findPackage(trimId, packageId)).thenReturn(generatePackageEntity());
         when(packageMapper.findHashTag(packageId)).thenReturn(generateHashTagEntities());
         when(packageMapper.findOptionComponent(packageId)).thenReturn(List.of(1L, 2L));
-        when(optionService.findOptionInformation(1L, trimId)).thenReturn(OptionDetailsDto.builder()
+        when(optionService.findOptionInformation(1L)).thenReturn(OptionDto.builder()
                 .name("first")
                 .containsHmgData(true)
                 .build());
-        when(optionService.findOptionInformation(2L, trimId)).thenReturn(OptionDetailsDto.builder()
+        when(optionService.findOptionInformation(2L)).thenReturn(OptionDto.builder()
                 .name("second")
                 .containsHmgData(false)
                 .build());
@@ -59,11 +59,11 @@ class PackageServiceTest {
         softly.assertThat(actualPackageDetailsDto.getHashTags()).as("세 개의 hashtag 정보를 포함한다.").hasSize(3);
         softly.assertThat(actualPackageDetailsDto.getName()).as("name = package name이다.").isEqualTo("package name");
         softly.assertThat(actualPackageDetailsDto.getCategory()).as("category = 편의").isEqualTo(OptionCategory.CONVENIENCE.getLabel());
-        softly.assertThat(actualPackageDetailsDto.getComponents()).as("유효한 hmgData를 포함한다.").contains(OptionDetailsDto.builder()
+        softly.assertThat(actualPackageDetailsDto.getComponents()).as("유효한 hmgData를 포함한다.").contains(OptionDto.builder()
                 .name("second")
                 .containsHmgData(false)
                 .build())
-                .contains(OptionDetailsDto.builder()
+                .contains(OptionDto.builder()
                 .name("first")
                 .containsHmgData(true)
                 .build());
