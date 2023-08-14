@@ -1,6 +1,8 @@
 package com.h2o.h2oServer.domain.optionPackage.dto;
 
 import com.h2o.h2oServer.domain.option.dto.OptionDetailsDto;
+import com.h2o.h2oServer.domain.option.dto.OptionDto;
+import com.h2o.h2oServer.domain.option.dto.OptionStatisticsDto;
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
 import com.h2o.h2oServer.domain.option.entity.enums.HashTag;
 import com.h2o.h2oServer.domain.optionPackage.entity.PackageEntity;
@@ -10,6 +12,8 @@ import lombok.Data;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.h2o.h2oServer.domain.option.dto.OptionStatisticsDto.SELL_NUMBER;
+
 @Builder
 @Data
 public class PackageDetailsDto {
@@ -17,22 +21,27 @@ public class PackageDetailsDto {
     private String category;
     private Integer price;
     private Integer choiceRatio;
+    private Integer choiceCount;
+    private Boolean isOverHarf;
     private List<String> hashTags;
-    private List<OptionDetailsDto> components;
+    private List<OptionDto> components;
 
     public static PackageDetailsDto of(PackageEntity packageEntity,
                                        List<HashTagEntity> hashTagEntities,
-                                       List<OptionDetailsDto> optionDetailsDtos) {
+                                       List<OptionDto> optionDtos) {
+        Integer choiceCount = Math.round(packageEntity.getChoiceRatio() * SELL_NUMBER);
         return PackageDetailsDto.builder()
                 .name(packageEntity.getName())
                 .category(packageEntity.getCategory().getLabel())
                 .price(packageEntity.getPrice())
                 .choiceRatio(Math.round(packageEntity.getChoiceRatio() * 100))
+                .choiceCount(choiceCount)
+                .isOverHarf(choiceCount > SELL_NUMBER / 2)
                 .hashTags(hashTagEntities.stream()
                         .map(HashTagEntity::getName)
                         .map(HashTag::getLabel)
                         .collect(Collectors.toList()))
-                .components(optionDetailsDtos)
+                .components(optionDtos)
                 .build();
     }
 }

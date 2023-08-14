@@ -1,7 +1,7 @@
 package com.h2o.h2oServer.domain.option.mapper;
 
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
-import com.h2o.h2oServer.domain.option.entity.OptionEntity;
+import com.h2o.h2oServer.domain.option.entity.OptionDetailsEntity;
 import com.h2o.h2oServer.domain.option.entity.enums.HashTag;
 import com.h2o.h2oServer.domain.option.entity.enums.OptionCategory;
 import org.assertj.core.api.SoftAssertions;
@@ -27,7 +27,7 @@ class OptionMapperTest {
         //given
         Long trimId = 1L;
         Long optionId = 1L;
-        OptionEntity expectedOptionEntity = OptionEntity.builder()
+        OptionDetailsEntity expectedOptionDetailsEntity = OptionDetailsEntity.builder()
                 .name("Option 1")
                 .image("image_url_1")
                 .description("Description for Option 1")
@@ -39,11 +39,11 @@ class OptionMapperTest {
                 .build();
 
         //when
-        OptionEntity actualOptionEntity = optionMapper.findOption(optionId, trimId);
+        OptionDetailsEntity actualOptionDetailsEntity = optionMapper.findOptionDetails(optionId, trimId);
 
         //then
-        softly.assertThat(actualOptionEntity).as("유효한 데이터가 매핑되었는지 확인").isNotNull();
-        softly.assertThat(actualOptionEntity).as("데이터베이스에 존재하는 데이터인지 확인").isEqualTo(expectedOptionEntity);
+        softly.assertThat(actualOptionDetailsEntity).as("유효한 데이터가 매핑되었는지 확인").isNotNull();
+        softly.assertThat(actualOptionDetailsEntity).as("데이터베이스에 존재하는 데이터인지 확인").isEqualTo(expectedOptionDetailsEntity);
         softly.assertAll();
     }
 

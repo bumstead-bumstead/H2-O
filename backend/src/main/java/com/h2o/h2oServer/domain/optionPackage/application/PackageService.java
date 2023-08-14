@@ -2,6 +2,7 @@ package com.h2o.h2oServer.domain.optionPackage.application;
 
 import com.h2o.h2oServer.domain.option.application.OptionService;
 import com.h2o.h2oServer.domain.option.dto.OptionDetailsDto;
+import com.h2o.h2oServer.domain.option.dto.OptionDto;
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
 import com.h2o.h2oServer.domain.optionPackage.dto.PackageDetailsDto;
 import com.h2o.h2oServer.domain.optionPackage.entity.PackageEntity;
@@ -23,10 +24,10 @@ public class PackageService {
         List<HashTagEntity> hashTagEntities = packageMapper.findHashTag(packageId);
         List<Long> optionComponentsIds = packageMapper.findOptionComponent(packageId);
 
-        List<OptionDetailsDto> optionDetailsDtos = optionComponentsIds.stream()
-                .map(optionId -> optionService.findOptionInformation(optionId, trimId))
+        List<OptionDto> optionDtos = optionComponentsIds.stream()
+                .map(optionId -> optionService.findOptionInformation(optionId))
                 .collect(Collectors.toList());
 
-        return PackageDetailsDto.of(packageEntity, hashTagEntities, optionDetailsDtos);
+        return PackageDetailsDto.of(packageEntity, hashTagEntities, optionDtos);
     }
 }

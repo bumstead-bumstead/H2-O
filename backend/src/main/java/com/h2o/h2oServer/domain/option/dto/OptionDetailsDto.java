@@ -1,7 +1,7 @@
 package com.h2o.h2oServer.domain.option.dto;
 
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
-import com.h2o.h2oServer.domain.option.entity.OptionEntity;
+import com.h2o.h2oServer.domain.option.entity.OptionDetailsEntity;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,23 +20,23 @@ public class OptionDetailsDto {
     private Integer price;
     private boolean containsHmgData;
 
-    public static OptionDetailsDto of(OptionEntity optionEntity, List<HashTagEntity> hashTagEntities) {
+    public static OptionDetailsDto of(OptionDetailsEntity optionDetailsEntity, List<HashTagEntity> hashTagEntities) {
         return OptionDetailsDto.builder()
-                .name(optionEntity.getName())
-                .category(optionEntity.getCategory().getLabel())
+                .name(optionDetailsEntity.getName())
+                .category(optionDetailsEntity.getCategory().getLabel())
                 .hashTags(hashTagEntities.stream()
                         .map(hashTagEntity -> hashTagEntity.getName().getLabel())
                         .collect(Collectors.toList()))
-                .image(optionEntity.getImage())
-                .description(optionEntity.getDescription())
-                .hmgData(OptionStatisticsDto.of(optionEntity.getChoiceRatio(),
-                        optionEntity.getUseCount()))
-                .price(optionEntity.getPrice())
-                .containsHmgData(containsHmgData(optionEntity))
+                .image(optionDetailsEntity.getImage())
+                .description(optionDetailsEntity.getDescription())
+                .hmgData(OptionStatisticsDto.of(optionDetailsEntity.getChoiceRatio(),
+                        optionDetailsEntity.getUseCount()))
+                .price(optionDetailsEntity.getPrice())
+                .containsHmgData(containsHmgData(optionDetailsEntity))
                 .build();
     }
 
-    private static boolean containsHmgData(OptionEntity optionEntity) {
-        return optionEntity.getChoiceRatio() != null;
+    private static boolean containsHmgData(OptionDetailsEntity optionDetailsEntity) {
+        return optionDetailsEntity.getChoiceRatio() != null;
     }
 }
