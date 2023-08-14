@@ -9,8 +9,8 @@ import com.h2o.h2oServer.domain.model_type.mapper.TechnicalSpecMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,20 +26,20 @@ public class ModelTypeService {
     }
 
     public List<CarPowertrainDto> findPowertrains(Long carId) {
-        List<CarPowertrainDto> detailPowertrains = new ArrayList<>();
+        List<CarPowerTrainEntity> powertrainEntities = powerTrainMapper.findPowertrainsByCarId(carId);
 
-        List<CarPowerTrainEntity> powertrains = powerTrainMapper.findPowertrainsByCarId(carId);
+        return powertrainEntities.stream()
+                .map(this::mapToPowerTrainDto)
+                .collect(Collectors.toList());
+    }
 
-        for (CarPowerTrainEntity powertrain : powertrains) {
-            Long powertrainId = powertrain.getPowertrainId();
+    private CarPowertrainDto mapToPowerTrainDto(CarPowerTrainEntity powertrain) {
+        Long powertrainId = powertrain.getPowertrainId();
 
-            PowertrainOutputEntity output = powerTrainMapper.findOutput(powertrainId);
-            PowertrainTorqueEntity torque = powerTrainMapper.findTorque(powertrainId);
+        PowertrainOutputEntity output = powerTrainMapper.findOutput(powertrainId);
+        PowertrainTorqueEntity torque = powerTrainMapper.findTorque(powertrainId);
 
-            detailPowertrains.add(CarPowertrainDto.of(powertrain, output, torque));
-        }
-
-        return detailPowertrains;
+        return CarPowertrainDto.of(powertrain, output, torque);
     }
 
     public List<CarBodytypeDto> findBodytypes(Long carId) {
