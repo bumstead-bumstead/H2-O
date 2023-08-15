@@ -37,7 +37,8 @@ public class TrimController {
     @GetMapping("/trim/{trimId}/price-range")
     public PriceRangeDto getPriceRange(@PathVariable Long trimId) {
         return trimService.findPriceRange(trimId);
-
+    }
+    
       @GetMapping("/trim/{trimId}/default-composition")
     public DefaultTrimCompositionDto getDefaultTrimComposition(@PathVariable Long trimId) {
         return trimService.findDefaultComposition(trimId);
