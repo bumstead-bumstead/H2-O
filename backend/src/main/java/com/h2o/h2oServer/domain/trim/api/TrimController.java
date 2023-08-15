@@ -23,10 +23,10 @@ public class TrimController {
     private final TrimService trimService;
 
     @ApiOperation(value = "차량의 트림 정보 조회", notes = "car_id를 기준으로 모든 트림 정보를 반환하는 API")
-    @ApiImplicitParam(name = "vehicleId", value = "차종 인덱스 번호")
-    @GetMapping("vehicle/{vehicleId}/trim")
-    public List<TrimDto> getTrimInformation(@PathVariable Long vehicleId) {
-        return trimService.findTrimInformation(vehicleId);
+    @ApiImplicitParam(name = "carId", value = "차종 인덱스 번호")
+    @GetMapping("car/{carId}/trim")
+    public List<TrimDto> getTrimInformation(@PathVariable Long carId) {
+        return trimService.findTrimInformation(carId);
     }
 
     @ApiOperation(value = "트림의 외부 색상 정보 조회", notes = "trim_id를 기준으로 모든 외부 색상 정보를 반환하는 API")
