@@ -63,4 +63,17 @@ public class TrimService {
                 .map(InternalColorDto::of)
                 .collect(Collectors.toList());
     }
+
+    public PriceRangeDto findPriceRange(Long trimId) {
+        TrimEntity trimEntity = trimMapper.findById(trimId);
+        Long carId = trimEntity.getCarId();
+        Integer trimPrice = trimEntity.getPrice();
+        Integer componentPrice = trimMapper.findMaximumComponentPrice(trimId);
+
+        Integer minimumModelTypePrice = carMapper.findMinimumModelTypePrice(carId);
+        Integer maximumModelTypePrice = carMapper.findMaximumModelTypePrice(carId);
+
+        return PriceRangeDto.of(trimPrice + maximumModelTypePrice + componentPrice,
+                trimPrice + minimumModelTypePrice);
+    }
 }
