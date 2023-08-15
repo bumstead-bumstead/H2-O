@@ -1,6 +1,7 @@
 package com.h2o.h2oServer.domain.trim.application;
 
 import com.h2o.h2oServer.domain.car.mapper.CarMapper;
+import com.h2o.h2oServer.domain.model_type.application.ModelTypeService;
 import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.PriceRangeDto;
@@ -28,6 +29,7 @@ class TrimServiceTest {
     private static TrimMapper trimMapper;
     private static CarMapper carMapper;
     private static ExternalColorMapper externalColorMapper;
+    private static ModelTypeService modelTypeService;
     private static TrimService trimService;
     private static SoftAssertions softly;
 
@@ -36,7 +38,8 @@ class TrimServiceTest {
         trimMapper = Mockito.mock(TrimMapper.class);
         externalColorMapper = Mockito.mock(ExternalColorMapper.class);
         carMapper = Mockito.mock(CarMapper.class);
-        trimService = new TrimService(trimMapper, externalColorMapper, carMapper);
+        modelTypeService = Mockito.mock(ModelTypeService.class);
+        trimService = new TrimService(trimMapper, externalColorMapper, carMapper, modelTypeService);
         softly = new SoftAssertions();
     }
 

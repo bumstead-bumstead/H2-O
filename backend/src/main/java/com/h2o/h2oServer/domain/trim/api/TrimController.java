@@ -1,6 +1,7 @@
 package com.h2o.h2oServer.domain.trim.api;
 
 import com.h2o.h2oServer.domain.trim.application.TrimService;
+import com.h2o.h2oServer.domain.trim.dto.DefaultTrimCompositionDto;
 import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.PriceRangeDto;
@@ -36,5 +37,9 @@ public class TrimController {
     @GetMapping("/trim/{trimId}/price-range")
     public PriceRangeDto getPriceRange(@PathVariable Long trimId) {
         return trimService.findPriceRange(trimId);
+
+      @GetMapping("/trim/{trimId}/default-composition")
+    public DefaultTrimCompositionDto getDefaultTrimComposition(@PathVariable Long trimId) {
+        return trimService.findDefaultComposition(trimId);
     }
 }
