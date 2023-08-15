@@ -12,5 +12,5 @@ public interface BodytypeMapper {
 
     List<CarBodytypeEntity> findBodytypesByCarId(Long carId);
 
-    CarBodytypeEntity findDefaultBodytypesByCarId(Long carId);
+    CarBodytypeEntity findDefaultBodytypeByCarId(Long carId);
 }

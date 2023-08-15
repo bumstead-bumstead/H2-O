@@ -10,15 +10,15 @@
     </select>
 
     <select id="findBodytypesByCarId" resultType="CarBodytypeEntity">
-        <include refid="findBodytypesByCarId"/>
+        <include refid="findBodytypeByCarId"/>
     </select>
 
-    <select id="findDefaultBodytypesByCarId" resultType="CarBodytypeEntity">
-        <include refid="findBodytypesByCarId"/>
+    <select id="findDefaultBodytypeByCarId" resultType="CarBodytypeEntity">
+        <include refid="findBodytypeByCarId"/>
         limit 1
     </select>
 
-    <sql id="findBodytypesByCarId">
+    <sql id="findBodytypeByCarId">
         select car_id, bodytype_id, name, description, image, price, choice_ratio
         from car_bodytype
                  join bodytype

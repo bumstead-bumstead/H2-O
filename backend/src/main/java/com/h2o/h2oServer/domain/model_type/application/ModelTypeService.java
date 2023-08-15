@@ -61,7 +61,7 @@ public class ModelTypeService {
 
     public DefaultTrimCompositionDto findDefaultModelType(Long carId) {
         CarDrivetrainDto carDrivetrainDto = CarDrivetrainDto.of(driveTrainMapper.findDefaultDrivetrainByCarId(carId));
-        CarBodytypeDto carBodytypeDto = CarBodytypeDto.of(bodyTypeMapper.findDefaultBodytypesByCarId(carId));
+        CarBodytypeDto carBodytypeDto = CarBodytypeDto.of(bodyTypeMapper.findDefaultBodytypeByCarId(carId));
         CarPowertrainDto carPowertrainDto = mapToPowerTrainDto(powerTrainMapper.findDefaultPowertrainByCarId(carId));
 
         return DefaultTrimCompositionDto.builder()
