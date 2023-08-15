@@ -191,4 +191,19 @@ class TrimMapperTest {
                 .contains(expectEntity2);
         softly.assertAll();
     }
+
+    @Test
+    @DisplayName("트림이 가질 수 있는 패키지/추가 옵션 가격의 합을 반환한다.")
+    @Sql("classpath:db/trim/trims-option-data.sql")
+    void findMaximumComponentPrice() {
+        //given
+        Long trimId = 1L;
+        Integer expectedPrice = 4890;
+
+        //when
+        Integer actualPrice = trimMapper.findMaximumComponentPrice(trimId);
+
+        //then
+        assertThat(actualPrice).isEqualTo(expectedPrice);
+    }
 }
