@@ -76,8 +76,8 @@ public class TrimService {
         InternalColorEntity defaultInternalColor = trimMapper.findDefaultInternalColor(trimId);
         List<ImageEntity> imageEntities = externalColorMapper.findImages(defaultExternalColor.getId());
 
-        defaultTrimCompositionDto.setInternalColorDto(InternalColorDto.of(defaultInternalColor));
-        defaultTrimCompositionDto.setExternalColorDto(ExternalColorDto.of(defaultExternalColor, imageEntities));
+        defaultTrimCompositionDto.setInternalColor(InternalColorDto.of(defaultInternalColor));
+        defaultTrimCompositionDto.setExternalColor(ExternalColorDto.of(defaultExternalColor, imageEntities));
 
         return defaultTrimCompositionDto;
     }

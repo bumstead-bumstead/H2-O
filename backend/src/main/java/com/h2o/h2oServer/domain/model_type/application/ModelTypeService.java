@@ -65,9 +65,9 @@ public class ModelTypeService {
         CarPowertrainDto carPowertrainDto = mapToPowerTrainDto(powerTrainMapper.findDefaultPowertrainByCarId(carId));
 
         return DefaultTrimCompositionDto.builder()
-                .carBodytypeDto(carBodytypeDto)
-                .carDrivetrainDto(carDrivetrainDto)
-                .carPowertrainDto(carPowertrainDto)
+                .bodytype(carBodytypeDto)
+                .drivetrain(carDrivetrainDto)
+                .powertrain(carPowertrainDto)
                 .build();
     }
 }

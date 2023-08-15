@@ -9,9 +9,9 @@ import lombok.Data;
 @Data
 @Builder
 public class DefaultTrimCompositionDto {
-    private CarPowertrainDto carPowertrainDto;
-    private CarBodytypeDto carBodytypeDto;
-    private CarDrivetrainDto carDrivetrainDto;
-    private InternalColorDto internalColorDto;
-    private ExternalColorDto externalColorDto;
+    private CarPowertrainDto powertrain;
+    private CarBodytypeDto bodytype;
+    private CarDrivetrainDto drivetrain;
+    private InternalColorDto internalColor;
+    private ExternalColorDto externalColor;
 }
