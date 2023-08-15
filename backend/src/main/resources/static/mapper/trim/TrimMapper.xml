@@ -62,10 +62,10 @@
         from (select trims.id, sum(trims_package.price) as package_price
             from trims join trims_package on trims.id = trims_package.trim_id where trims.id = #{id}) as package
                 natural join (select trims.id, sum(trims_options.price) as option_price
-                    from trims join trims_options on trims.id = trims_options.trim_id where trims.id = #{id} and option_type = 'extra') as options
+                    from trims join trims_options on trims.id = trims_options.trim_id where trims.id = #{id} and option_type = 'extra' group by trims.id) as options
                 natural join (select trims.id, max(trims_internal_color.price) as internal_color_price
-                    from trims join trims_internal_color on trims.id = trims_internal_color.trim_id where trims.id = #{id}) as internal_color
+                    from trims join trims_internal_color on trims.id = trims_internal_color.trim_id where trims.id = #{id} group by trims.id) as internal_color
                 natural join (select trims.id, max(trims_external_color.price) as external_color_price
-                    from trims join trims_external_color on trims.id = trims_external_color.trim_id where trims.id = #{id}) as external_color;
+                    from trims join trims_external_color on trims.id = trims_external_color.trim_id where trims.id = #{id} group by trims.id) as external_color;
     </select>
 </mapper>
