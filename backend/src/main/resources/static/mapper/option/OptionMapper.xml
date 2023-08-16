@@ -22,4 +22,11 @@
                  join hashtag on hashtag.id = options_hashtag.hashtag_id
         where options.id = #{optionId}
     </select>
+
+    <select id="checkIfOptionExists" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM options
+        WHERE id = #{id}
+    </select>
+
 </mapper>
