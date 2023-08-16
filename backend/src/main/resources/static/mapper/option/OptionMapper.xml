@@ -6,7 +6,7 @@
         select name, image, description, category, use_count, choice_ratio, price, option_type
         from options
         join trims_options on trims_options.option_id = options.id
-        where trims_options.trim_id = #{trimId} and options.id = #{optionId}
+        where trims_options.trim_id = #{trimId} and options.id = #{id}
     </select>
 
     <select id="findOption" resultType="OptionEntity">
