@@ -58,6 +58,10 @@
         <include refid="findInternalColor"/>
         limit 1
     </select>
+
+    <select id="findQuantityBetween" resultType="integer">
+
+    </select>
   
     <select id="findMaximumComponentPrice" resultType="integer">
       select package_price + option_price + internal_color_price + external_color_price
