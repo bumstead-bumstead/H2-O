@@ -88,7 +88,7 @@ class BodytypeMapperTest {
 
     @Test
     @DisplayName("존재하는 바디타입인 경우 true를 반환한다.")
-    void checkIfOptionExists() {
+    void checkIfBodytypeExists() {
         //given
         Long id = 1L;
 
@@ -101,7 +101,7 @@ class BodytypeMapperTest {
 
     @Test
     @DisplayName("존재하지 않는 바디타입인 경우 false를 반환한다.")
-    void checkIfOptionExistsFalse() {
+    void checkIfBodytypeExistsFalse() {
         //given
         Long id = 5L;
 
