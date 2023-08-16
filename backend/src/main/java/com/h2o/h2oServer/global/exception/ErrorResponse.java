@@ -1,5 +1,8 @@
 package com.h2o.h2oServer.global.exception;
 
+import lombok.Data;
+
+@Data
 public class ErrorResponse {
     private String message;
 
