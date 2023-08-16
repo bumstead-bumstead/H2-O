@@ -80,7 +80,7 @@ class OptionMapperTest {
     }
 
     @Test
-    @DisplayName("존재하는 차량인 경우 true를 반환한다.")
+    @DisplayName("존재하는 옵션인 경우 true를 반환한다.")
     @Sql("classpath:db/option/option-data.sql")
     void checkIfOptionExists() {
         //given
@@ -94,7 +94,7 @@ class OptionMapperTest {
     }
 
     @Test
-    @DisplayName("존재하는 차량인 경우 true를 반환한다.")
+    @DisplayName("존재하지 않는 옵션인 경우 false를 반환한다.")
     @Sql("classpath:db/option/option-data.sql")
     void checkIfOptionExistsFalse() {
         //given

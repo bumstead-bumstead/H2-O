@@ -112,5 +112,4 @@ class DrivetrainMapperTest {
         //then
         assertThat(isExists).isFalse();
     }
-
 }

@@ -88,5 +88,4 @@ public class OptionsService {
             throw new NoSuchTrimException();
         }
     }
-
 }
