@@ -2,11 +2,7 @@ package com.h2o.h2oServer.domain.trim.application;
 
 import com.h2o.h2oServer.domain.car.mapper.CarMapper;
 import com.h2o.h2oServer.domain.model_type.application.ModelTypeService;
-import com.h2o.h2oServer.domain.trim.dto.DefaultTrimCompositionDto;
-import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
-import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
-import com.h2o.h2oServer.domain.trim.dto.PriceRangeDto;
-import com.h2o.h2oServer.domain.trim.dto.TrimDto;
+import com.h2o.h2oServer.domain.trim.dto.*;
 import com.h2o.h2oServer.domain.trim.entity.ExternalColorEntity;
 import com.h2o.h2oServer.domain.trim.entity.ImageEntity;
 import com.h2o.h2oServer.domain.trim.entity.InternalColorEntity;
@@ -17,6 +13,7 @@ import com.h2o.h2oServer.domain.trim.mapper.TrimMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,5 +89,18 @@ public class TrimService {
         defaultTrimCompositionDto.setExternalColor(ExternalColorDto.of(defaultExternalColor, imageEntities));
 
         return defaultTrimCompositionDto;
-   }
+    }
+
+    public PriceDistributionDto findAndScalePriceDistribution(Long trimId) {
+        PriceRangeDto priceRangeDto = findPriceRange(trimId);
+        int unit = (priceRangeDto.getMaxPrice() - priceRangeDto.getMinPrice()) / 30;
+        List<Integer> result = new ArrayList<>();
+
+        for (int index = 0; index < 30; index++) {
+            Integer quantityPerUnit = trimMapper.findQuantityBetween(trimId, priceRangeDto.getMinPrice(), unit * index);
+            result.add(quantityPerUnit);
+        }
+
+        return PriceDistributionDto.of(unit, result);
+    }
 }
