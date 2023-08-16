@@ -6,6 +6,6 @@ public class NoSuchTrimException extends RuntimeException {
     }
 
     public NoSuchTrimException() {
-        super("존재하지 않는 트림입니다.");
+        super("존재하지 않는 트림에 대한 요청입니다.");
     }
 }
