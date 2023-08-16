@@ -72,7 +72,7 @@ class TrimServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 차량에 대한 요청인 경우 NoSuchTrimException을 발생시킨.")
+    @DisplayName("존재하지 않는 차량에 대한 요청인 경우 NoSuchTrimException을 발생시킨다.")
     void findTrimInformationNotExist() {
         //given
         Long carId = Long.MAX_VALUE;

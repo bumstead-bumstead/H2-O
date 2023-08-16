@@ -9,7 +9,6 @@ import com.h2o.h2oServer.domain.model_type.mapper.DrivetrainMapper;
 import com.h2o.h2oServer.domain.model_type.mapper.PowertrainMapper;
 import com.h2o.h2oServer.domain.model_type.mapper.TechnicalSpecMapper;
 import com.h2o.h2oServer.domain.trim.dto.DefaultTrimCompositionDto;
-import com.h2o.h2oServer.global.QueryEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
