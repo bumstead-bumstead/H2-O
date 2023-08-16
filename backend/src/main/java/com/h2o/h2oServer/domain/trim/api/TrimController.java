@@ -51,6 +51,8 @@ public class TrimController {
         return trimService.findDefaultComposition(trimId);
     }
 
+    @ApiOperation(value = "트림의 가격 범위 정보 조회", notes = "트림의 최대/최소 가격을 반환하는 API")
+    @ApiImplicitParam(name = "trimId", value = "트림 인덱스 번호")
     @GetMapping("/trim/{trimId}/price-range")
     public PriceRangeDto getPriceRange(@PathVariable Long trimId) {
         return trimService.findPriceRange(trimId);
