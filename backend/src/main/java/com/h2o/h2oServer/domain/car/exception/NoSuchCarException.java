@@ -6,6 +6,6 @@ public class NoSuchCarException extends RuntimeException {
     }
 
     public NoSuchCarException() {
-        super("존재하지 않는 차종입니다.");
+        super("존재하지 않는 차종에 대한 요청입니다.");
     }
 }
