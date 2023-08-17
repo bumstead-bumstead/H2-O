@@ -29,5 +29,7 @@ public interface TrimMapper {
 
     ExternalColorEntity findDefaultExternalColor(Long id);
 
+    Boolean checkIfTrimExists(Long id);
+
     Integer findQuantityBetween(Long id, Integer from, Integer to);
 }

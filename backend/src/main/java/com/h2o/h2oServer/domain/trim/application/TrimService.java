@@ -2,6 +2,12 @@ package com.h2o.h2oServer.domain.trim.application;
 
 import com.h2o.h2oServer.domain.car.mapper.CarMapper;
 import com.h2o.h2oServer.domain.model_type.application.ModelTypeService;
+import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
+import com.h2o.h2oServer.domain.trim.dto.DefaultTrimCompositionDto;
+import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
+import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
+import com.h2o.h2oServer.domain.trim.dto.PriceRangeDto;
+import com.h2o.h2oServer.domain.trim.dto.TrimDto;
 import com.h2o.h2oServer.domain.trim.dto.*;
 import com.h2o.h2oServer.domain.trim.entity.ExternalColorEntity;
 import com.h2o.h2oServer.domain.trim.entity.ImageEntity;
@@ -25,8 +31,10 @@ public class TrimService {
     private final CarMapper carMapper;
     private final ModelTypeService modelTypeService;
 
-    public List<TrimDto> findTrimInformation(Long vehicleId) {
-        List<TrimEntity> trimEntities = trimMapper.findByCarId(vehicleId);
+    public List<TrimDto> findTrimInformation(Long carId) {
+        List<TrimEntity> trimEntities = trimMapper.findByCarId(carId);
+
+        validateExistence(trimEntities);
 
         return trimEntities.stream()
                 .map(this::manipulateTrimEntity)
@@ -35,6 +43,8 @@ public class TrimService {
 
     public List<ExternalColorDto> findExternalColorInformation(Long trimId) {
         List<ExternalColorEntity> externalColorEntities = trimMapper.findExternalColor(trimId);
+
+        validateExistence(externalColorEntities);
 
         return externalColorEntities.stream()
                 .map(this::manipulateExternalColorEntity)
@@ -59,6 +69,8 @@ public class TrimService {
     public List<InternalColorDto> findInternalColorInformation(Long trimId) {
         List<InternalColorEntity> internalColorEntities = trimMapper.findInternalColor(trimId);
 
+        validateExistence(internalColorEntities);
+
         return internalColorEntities.stream()
                 .map(InternalColorDto::of)
                 .collect(Collectors.toList());
@@ -66,6 +78,9 @@ public class TrimService {
 
     public PriceRangeDto findPriceRange(Long trimId) {
         TrimEntity trimEntity = trimMapper.findById(trimId);
+
+        validateExistence(trimEntity);
+
         Long carId = trimEntity.getCarId();
         Integer trimPrice = trimEntity.getPrice();
         Integer componentPrice = trimMapper.findMaximumComponentPrice(trimId);
@@ -78,7 +93,10 @@ public class TrimService {
     }
 
     public DefaultTrimCompositionDto findDefaultComposition(Long trimId) {
-        Long carId = trimMapper.findById(trimId).getCarId();
+        TrimEntity trimEntity = trimMapper.findById(trimId);
+
+        validateExistence(trimEntity);
+        Long carId = trimEntity.getCarId();
         DefaultTrimCompositionDto defaultTrimCompositionDto = modelTypeService.findDefaultModelType(carId);
 
         ExternalColorEntity defaultExternalColor = trimMapper.findDefaultExternalColor(trimId);
@@ -90,6 +108,19 @@ public class TrimService {
 
         return defaultTrimCompositionDto;
     }
+
+    private static void validateExistence(TrimEntity trimEntity) {
+        if (trimEntity == null) {
+            throw new NoSuchTrimException();
+        }
+    }
+
+    private static void validateExistence(List entities) {
+        if (entities == null || entities.isEmpty()) {
+            throw new NoSuchTrimException();
+        }
+    }
+
 
     public PriceDistributionDto findAndScalePriceDistribution(Long trimId) {
         PriceRangeDto priceRangeDto = findPriceRange(trimId);
