@@ -124,11 +124,12 @@ public class TrimService {
 
     public PriceDistributionDto findAndScalePriceDistribution(Long trimId) {
         PriceRangeDto priceRangeDto = findPriceRange(trimId);
-        int unit = (priceRangeDto.getMaxPrice() - priceRangeDto.getMinPrice()) / 30;
+        Integer minPrice = priceRangeDto.getMinPrice();
+        int unit = (priceRangeDto.getMaxPrice() - minPrice) / 30;
         List<Integer> result = new ArrayList<>();
 
         for (int index = 0; index < 30; index++) {
-            Integer quantityPerUnit = trimMapper.findQuantityBetween(trimId, priceRangeDto.getMinPrice(), unit * index);
+            Integer quantityPerUnit = trimMapper.findQuantityBetween(trimId, minPrice + unit * index, minPrice + unit * (index + 1));
             result.add(quantityPerUnit);
         }
 

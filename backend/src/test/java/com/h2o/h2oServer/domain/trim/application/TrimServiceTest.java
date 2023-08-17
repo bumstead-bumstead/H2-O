@@ -51,18 +51,18 @@ class TrimServiceTest {
     }
 
     @Test
-    @DisplayName("존재하는 vehicle에 대한 요청인 경우 Dto로 formatting해서 반환한다.")
+    @DisplayName("존재하는 car에 대한 요청인 경우 Dto로 formatting해서 반환한다.")
     void findTrimInformation() {
         //given
-        Long vehicleId = 1L;
-        when(trimMapper.findByCarId(vehicleId)).thenReturn(generateTrimEntityList());
+        Long carId = 1L;
+        when(trimMapper.findByCarId(carId)).thenReturn(generateTrimEntityList());
         when(trimMapper.findOptionStatistics(1L)).thenReturn(generateOptionStatisticsList());
         when(trimMapper.findOptionStatistics(2L)).thenReturn(generateOptionStatisticsList());
         when(trimMapper.findImages(1L)).thenReturn(generateImageEntityList());
         when(trimMapper.findImages(2L)).thenReturn(generateImageEntityList());
 
         //when
-        List<TrimDto> actualTrimDtos = trimService.findTrimInformation(vehicleId);
+        List<TrimDto> actualTrimDtos = trimService.findTrimInformation(carId);
 
         //then
         softly.assertThat(actualTrimDtos).as("null이 아니다.").isNotNull();
@@ -255,7 +255,7 @@ class TrimServiceTest {
         int unit = 10000000 / 30;
 
         for (int index = 0; index < 30; index++) {
-            when(trimMapper.findQuantityBetween(trimId, 30000000, unit * index)).thenReturn(5);
+            when(trimMapper.findQuantityBetween(trimId, 30000000 + unit * index, 30000000 + unit * (index + 1))).thenReturn(5);
         }
 
         //when
