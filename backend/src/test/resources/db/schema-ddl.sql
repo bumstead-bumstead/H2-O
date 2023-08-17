@@ -1,6 +1,6 @@
 CREATE TABLE `car`
 (
-    `id`       BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`       BIGINT       NOT NULL,
     `name`     VARCHAR(255) NOT NULL,
     `price`    INT          NOT NULL,
     `category` VARCHAR(20)  NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE `car`
 
 CREATE TABLE `trims`
 (
-    `id`          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`          BIGINT       NOT NULL,
     `car_id`      BIGINT       NOT NULL,
     `name`        VARCHAR(20)  NOT NULL,
     `description` VARCHAR(100) NULL,
@@ -18,7 +18,7 @@ CREATE TABLE `trims`
 
 CREATE TABLE `bodytype`
 (
-    `id`          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`          BIGINT       NOT NULL,
     `name`        VARCHAR(255) NOT NULL,
     `description` TEXT         NULL,
     `image`       TEXT         NOT NULL
@@ -26,7 +26,7 @@ CREATE TABLE `bodytype`
 
 CREATE TABLE `drivetrain`
 (
-    `id`          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`          BIGINT       NOT NULL,
     `name`        VARCHAR(255) NOT NULL,
     `description` TEXT         NULL,
     `image`       TEXT         NOT NULL
@@ -34,14 +34,14 @@ CREATE TABLE `drivetrain`
 
 CREATE TABLE `external_color`
 (
-    `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`         BIGINT       NOT NULL,
     `name`       VARCHAR(255) NOT NULL,
     `color_code` VARCHAR(7)   NOT NULL
 );
 
 CREATE TABLE `internal_color`
 (
-    `id`             BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`             BIGINT       NOT NULL,
     `name`           VARCHAR(255) NOT NULL,
     `fabric_image`   TEXT         NOT NULL,
     `internal_image` TEXT         NOT NULL
@@ -49,7 +49,7 @@ CREATE TABLE `internal_color`
 
 CREATE TABLE `options`
 (
-    `id`          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`          BIGINT       NOT NULL,
     `name`        VARCHAR(255) NOT NULL,
     `image`       TEXT         NOT NULL,
     `description` TEXT         NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `options`
 
 CREATE TABLE `powertrain`
 (
-    `id`          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`          BIGINT       NOT NULL,
     `name`        VARCHAR(255) NOT NULL,
     `description` TEXT         NULL,
     `image`       TEXT         NOT NULL
@@ -67,13 +67,13 @@ CREATE TABLE `powertrain`
 
 CREATE TABLE `hashtag`
 (
-    `id`   BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`   BIGINT       NOT NULL,
     `name` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `package`
 (
-    `id`       BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`       BIGINT       NOT NULL,
     `name`     VARCHAR(255) NOT NULL,
     `image`    TEXT         NOT NULL,
     `category` VARCHAR(20)  NOT NULL
@@ -81,7 +81,7 @@ CREATE TABLE `package`
 
 CREATE TABLE `quotation`
 (
-    `id`                BIGINT   PRIMARY KEY AUTO_INCREMENT,
+    `id`                BIGINT   NOT NULL,
     `car_id`            BIGINT   NOT NULL,
     `trim_id`           BIGINT   NOT NULL,
     `powertrain_id`     BIGINT   NOT NULL,
@@ -91,6 +91,28 @@ CREATE TABLE `quotation`
     `external_color_id` BIGINT   NOT NULL,
     `created_at`        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `url`               TEXT     NULL
+);
+
+CREATE TABLE `sold_car` (
+                            `id`	            BIGINT	NOT NULL,
+                            `car_id`	        BIGINT	NOT NULL,
+                            `trim_id`	        BIGINT	NOT NULL,
+                            `powertrain_id`	    BIGINT	NOT NULL,
+                            `bodytype_id`	    BIGINT	NOT NULL,
+                            `drivetrain_id`	    BIGINT	NOT NULL,
+                            `internal_color_id`	BIGINT	NOT NULL,
+                            `external_color_id`	BIGINT	NOT NULL,
+                            `price`	            INT	    NOT NULL
+);
+
+CREATE TABLE `sold_car_extra_options` (
+                                          `sold_car_id`	BIGINT	NOT NULL,
+                                          `option_id`	    BIGINT	NOT NULL
+);
+
+CREATE TABLE `sold_car_package` (
+                                    `sold_car_id`	BIGINT	NOT NULL,
+                                    `package_id`	BIGINT	NOT NULL
 );
 
 CREATE TABLE `powertrain_output`
@@ -143,14 +165,14 @@ CREATE TABLE `technical_spec`
 
 CREATE TABLE `external_color_image`
 (
-    `id`                BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`                BIGINT NOT NULL,
     `external_color_id` BIGINT NOT NULL,
     `image`             TEXT   NOT NULL
 );
 
 CREATE TABLE `trims_image`
 (
-    `id`      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `id`      BIGINT NOT NULL,
     `trim_id` BIGINT NOT NULL,
     `image`   TEXT   NOT NULL
 );
