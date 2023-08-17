@@ -7,6 +7,7 @@ import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.PriceRangeDto;
 import com.h2o.h2oServer.domain.trim.dto.TrimDto;
+import com.h2o.h2oServer.domain.trim.dto.*;
 import com.h2o.h2oServer.domain.trim.entity.ExternalColorEntity;
 import com.h2o.h2oServer.domain.trim.entity.ImageEntity;
 import com.h2o.h2oServer.domain.trim.entity.OptionStatisticsEntity;
@@ -228,22 +229,52 @@ class TrimServiceTest {
         //given
         Long trimId = 1L;
         long carId = 1L;
-        when(trimMapper.findById(trimId)).thenReturn(TrimEntity.builder()
-                .id(1L)
-                .name("Trim A")
-                .description("Description of Trim A")
-                .price(50000)
-                .carId(carId)
-                .build());
+        when(trimMapper.findById(trimId)).thenReturn(generateTrimEntity(carId));
         when(trimMapper.findMaximumComponentPrice(trimId)).thenReturn(20000);
         when(carMapper.findMaximumModelTypePrice(carId)).thenReturn(10000);
         when(carMapper.findMinimumModelTypePrice(carId)).thenReturn(0);
-        PriceRangeDto expectedPriceRange = PriceRangeDto.of(20000 + 50000 + 10000, 50000);
+        PriceRangeDto expectedPriceRange = PriceRangeDto.of(20000 + 30000000 + 10000, 30000000);
 
         //when
         PriceRangeDto actualPriceRange = trimService.findPriceRange(trimId);
 
         //then
         assertThat(actualPriceRange).isEqualTo(expectedPriceRange);
+    }
+
+    @Test
+    @DisplayName("존재하는 가격 범위 내의 분포 정보를 dto로 반환한다.")
+    void findAndScalePriceDistribution() {
+        //given
+        Long trimId = 1L;
+        Long carId = 1L;
+        when(trimMapper.findById(trimId)).thenReturn(generateTrimEntity(carId));
+        when(trimMapper.findMaximumComponentPrice(trimId)).thenReturn(5000000);
+        when(carMapper.findMaximumModelTypePrice(carId)).thenReturn(5000000);
+        when(carMapper.findMinimumModelTypePrice(carId)).thenReturn(0);
+        int unit = 10000000 / 30;
+
+        for (int index = 0; index < 30; index++) {
+            when(trimMapper.findQuantityBetween(trimId, 30000000, unit * index)).thenReturn(5);
+        }
+
+        //when
+        PriceDistributionDto actualDto = trimService.findAndScalePriceDistribution(trimId);
+
+        //then
+        softly.assertThat(actualDto.getUnit()).isEqualTo(unit);
+        softly.assertThat(actualDto.getQuantityPerUnit()).hasSize(30);
+        softly.assertThat(actualDto.getQuantityPerUnit()).allMatch(quantity -> quantity == 5);
+        softly.assertAll();
+    }
+
+    private static TrimEntity generateTrimEntity(long carId) {
+        return TrimEntity.builder()
+                .id(1L)
+                .name("Trim A")
+                .description("Description of Trim A")
+                .price(30000000)
+                .carId(carId)
+                .build();
     }
 }
