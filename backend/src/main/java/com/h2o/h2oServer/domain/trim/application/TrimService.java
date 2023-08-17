@@ -19,13 +19,14 @@ import com.h2o.h2oServer.domain.trim.mapper.TrimMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
 public class TrimService {
+    public static final int DISTRIBUTION_SEGMENT_COUNT = 30;
     private final TrimMapper trimMapper;
     private final ExternalColorMapper externalColorMapper;
     private final CarMapper carMapper;
@@ -125,14 +126,13 @@ public class TrimService {
     public PriceDistributionDto findAndScalePriceDistribution(Long trimId) {
         PriceRangeDto priceRangeDto = findPriceRange(trimId);
         Integer minPrice = priceRangeDto.getMinPrice();
-        int unit = (priceRangeDto.getMaxPrice() - minPrice) / 30;
-        List<Integer> result = new ArrayList<>();
 
-        for (int index = 0; index < 30; index++) {
-            Integer quantityPerUnit = trimMapper.findQuantityBetween(trimId, minPrice + unit * index, minPrice + unit * (index + 1));
-            result.add(quantityPerUnit);
-        }
+        int unit = (priceRangeDto.getMaxPrice() - minPrice) / DISTRIBUTION_SEGMENT_COUNT;
 
-        return PriceDistributionDto.of(unit, result);
+        List<Integer> quantityPerUnit = IntStream.range(0, DISTRIBUTION_SEGMENT_COUNT)
+                .mapToObj(index -> trimMapper.findQuantityBetween(trimId, minPrice + unit * index, minPrice + unit * (index + 1)))
+                .collect(Collectors.toList());
+
+        return PriceDistributionDto.of(unit, quantityPerUnit);
     }
 }
