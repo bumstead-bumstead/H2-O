@@ -83,8 +83,8 @@ public class TrimService {
         validateExistence(trimEntity);
 
         Long carId = trimEntity.getCarId();
-        Integer trimPrice = trimEntity.getPrice();
-        Integer componentPrice = trimMapper.findMaximumComponentPrice(trimId);
+        int trimPrice = trimEntity.getPrice();
+        int componentPrice = trimMapper.findMaximumComponentPrice(trimId);
 
         Integer minimumModelTypePrice = carMapper.findMinimumModelTypePrice(carId);
         Integer maximumModelTypePrice = carMapper.findMaximumModelTypePrice(carId);
