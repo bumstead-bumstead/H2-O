@@ -34,11 +34,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static com.h2o.h2oServer.global.util.StringParser.*;
 
 @Service
 @RequiredArgsConstructor
 public class QuotationService {
+    public static final double SIMILARITY_LOWER_BOUND = 0.2;
+    public static final double SIMILARITY_UPPER_BOUND = 0.9;
     private final QuotationMapper quotationMapper;
 
     private final CarMapper carMapper;
@@ -52,67 +55,37 @@ public class QuotationService {
 
     public List<SimilarQuotationDto> findSimilarQuotations(QuotationRequestDto quotationRequestDto) {
 
-
+        //1. 요청된 견적의 해시태그 벡터 초기화
         Map<HashTag, Integer> requestHashTagCount = new HashMap<>();
 
-        quotationRequestDto.getOptionIds().forEach((optionId) -> {
-            List<HashTagEntity> hashTagEntities = optionMapper.findHashTag(optionId);
+        collectHashTagsOfOptions(quotationRequestDto.getOptionIds(), requestHashTagCount);
 
-            for (HashTagEntity hashTagEntity : hashTagEntities) {
-                HashTag hashTag = hashTagEntity.getName();
-                requestHashTagCount.put(hashTag, requestHashTagCount.getOrDefault(hashTag, 0) + 1);
-            }
-        });
+        collectHashTagsOfPackages(quotationRequestDto.getPackageIds(), requestHashTagCount);
 
-        quotationRequestDto.getPackageIds().forEach((packageId) -> {
-            List<HashTagEntity> hashTagEntities = packageMapper.findHashTag(packageId);
-
-            for (HashTagEntity hashTagEntity : hashTagEntities) {
-                HashTag hashTag = hashTagEntity.getName();
-                requestHashTagCount.put(hashTag, requestHashTagCount.getOrDefault(hashTag, 0) + 1);
-            }
-        });
-
+        //2. 출고 견적 데이터 가져오기
         List<ReleaseEntity> releaseEntities = quotationMapper.findReleaseQuotationWithVolume(quotationRequestDto.getTrimId());
+
         PriorityQueue<Map.Entry<ReleaseEntity, Double>> similarityQueue = new PriorityQueue<>(
                 (entry1, entry2) -> (-1) * Double.compare(entry1.getValue(), entry2.getValue())
         );
 
-        for (int index = 0; index < releaseEntities.size(); index++) {
-            ReleaseEntity releaseEntity = releaseEntities.get(index);
-
-            List<Long> optionIds = Arrays.stream(releaseEntity.getOptionCombination()
-                            .split(","))
-                            .map(Long::parseLong)
-                            .collect(Collectors.toList());
-            List<Long> packageIds = Arrays.stream(releaseEntity.getPackageCombination()
-                            .split(","))
-                            .map(Long::parseLong)
-                            .collect(Collectors.toList());
+        //3. 출고 견적 데이터와의 코사인 유사도 정리
+        for (ReleaseEntity releaseEntity : releaseEntities) {
+            List<Long> optionIds = parseToLongList(releaseEntity.getOptionCombination());
+            List<Long> packageIds = parseToLongList(releaseEntity.getPackageCombination());
 
             Map<HashTag, Integer> hashTagCount = new HashMap<>();
 
-            optionIds.forEach((optionId) -> {
-                List<HashTagEntity> hashTagEntities = optionMapper.findHashTag(optionId);
+            //3-1. 옵션에 포함된 해시태그 정보 가져오기
+            collectHashTagsOfOptions(optionIds, hashTagCount);
 
-                for (HashTagEntity hashTagEntity : hashTagEntities) {
-                    HashTag hashTag = hashTagEntity.getName();
-                    hashTagCount.put(hashTag, hashTagCount.getOrDefault(hashTag, 0) + 1);
-                }
-            });
+            //3-2. 패키지에 포함된 해시태그 정보 가져오기
+            collectHashTagsOfPackages(packageIds, hashTagCount);
 
-            packageIds.forEach((packageId) -> {
-                List<HashTagEntity> hashTagEntities = packageMapper.findHashTag(packageId);
-
-                for (HashTagEntity hashTagEntity : hashTagEntities) {
-                    HashTag hashTag = hashTagEntity.getName();
-                    hashTagCount.put(hashTag, hashTagCount.getOrDefault(hashTag, 0) + 1);
-                }
-            });
-
+            //유사도 계산 후 queue에 추가
             double similarity = CosineSimilarityCalculator.calculateCosineSimilarity(requestHashTagCount, hashTagCount);
 
-            if (similarity < 0.2 || similarity > 0.9) {
+            if (similarity < SIMILARITY_LOWER_BOUND || similarity > SIMILARITY_UPPER_BOUND) {
                 continue;
             }
 
@@ -121,6 +94,7 @@ public class QuotationService {
 
         List<SimilarQuotationDto> similarQuotationDtos = new ArrayList<>();
 
+        //4. entity to DTO 변환
         for (int index = 0; index < 4; index++) {
             ReleaseEntity releaseEntity = similarityQueue.poll().getKey();
 
@@ -130,21 +104,7 @@ public class QuotationService {
             String image = externalColorMapper.findImages(releaseEntity.getExternalColorId()).get(30).getImage();
             int price = releaseEntity.getPrice();
 
-            List<Long> optionIds = Arrays.stream(releaseEntity.getOptionCombination()
-                            .split(","))
-                            .map(Long::parseLong)
-                            .collect(Collectors.toList());
-            List<OptionSummaryDto> optionSummaryDtos = new ArrayList<>();
-
-            for (Long optionId : optionIds) {
-                if (quotationRequestDto.getOptionIds().contains(optionId)) {
-                    continue;
-                }
-                OptionDetailsEntity optionDetailsEntity = optionMapper.findOptionDetails(optionId, releaseEntity.getTrimId());
-                optionSummaryDtos.add(OptionSummaryDto.of(optionId, optionDetailsEntity));
-
-                if (optionSummaryDtos.size() > 1) break;
-            }
+            List<OptionSummaryDto> optionSummaryDtos = extractOptionSummary(quotationRequestDto, releaseEntity);
 
             similarQuotationDtos.add(SimilarQuotationDto.of(
                     ModelTypeNameDto.builder()
@@ -159,7 +119,48 @@ public class QuotationService {
         }
 
         return similarQuotationDtos;
+    }
 
+    private List<OptionSummaryDto> extractOptionSummary(QuotationRequestDto quotationRequestDto,
+                                                        ReleaseEntity releaseEntity) {
+        List<Long> optionIds = parseToLongList(releaseEntity.getOptionCombination());
+
+        List<OptionSummaryDto> optionSummaryDtos = new ArrayList<>();
+
+        for (Long optionId : optionIds) {
+            if (quotationRequestDto.getOptionIds().contains(optionId)) {
+                continue;
+            }
+            OptionDetailsEntity optionDetailsEntity = optionMapper.findOptionDetails(optionId, releaseEntity.getTrimId());
+            optionSummaryDtos.add(OptionSummaryDto.of(optionId, optionDetailsEntity));
+
+            if (optionSummaryDtos.size() > 1) {
+                break;
+            }
+        }
+        return optionSummaryDtos;
+    }
+
+    private void collectHashTagsOfPackages(List<Long> packageIds, Map<HashTag, Integer> hashTagCount) {
+        packageIds.forEach((packageId) -> {
+            List<HashTagEntity> hashTagEntities = packageMapper.findHashTag(packageId);
+
+            for (HashTagEntity hashTagEntity : hashTagEntities) {
+                HashTag hashTag = hashTagEntity.getName();
+                hashTagCount.put(hashTag, hashTagCount.getOrDefault(hashTag, 0) + 1);
+            }
+        });
+    }
+
+    private void collectHashTagsOfOptions(List<Long> optionIds, Map<HashTag, Integer> hashTagCount) {
+        optionIds.forEach((optionId) -> {
+            List<HashTagEntity> hashTagEntities = optionMapper.findHashTag(optionId);
+
+            for (HashTagEntity hashTagEntity : hashTagEntities) {
+                HashTag hashTag = hashTagEntity.getName();
+                hashTagCount.put(hashTag, hashTagCount.getOrDefault(hashTag, 0) + 1);
+            }
+        });
     }
 
     @Transactional
