@@ -31,10 +31,10 @@ class TrimMapperTest {
 
     @Nested
     @DisplayName("트림 검색 테스트")
+    @Sql("classpath:db/trim/trims-data.sql")
     class FindTest {
         @Test
         @DisplayName("존재하는 회원에 대해서, 해당하는 row를 Trim 객체에 담아 반환한다.")
-        @Sql("classpath:db/trim/trims-data.sql")
         void findById() {
             //given
             Long targetId = 1L;
@@ -50,7 +50,6 @@ class TrimMapperTest {
 
         @Test
         @DisplayName("존재하지 않는 트림에 대해서는 null을 반환한다.")
-        @Sql("classpath:db/trim/trims-data.sql")
         void findByIdWithoutResult() {
             //given
             Long targetId = Long.MAX_VALUE;
@@ -64,7 +63,6 @@ class TrimMapperTest {
 
         @Test
         @DisplayName("존재하는 회원에 대해서, 해당하는 row를 Trim 객체에 담아 반환한다.")
-        @Sql("classpath:db/trim/trims-data.sql")
         void findByCarId() {
             //given
             Long targetCarId = 1L;
@@ -82,7 +80,6 @@ class TrimMapperTest {
 
         @Test
         @DisplayName("존재하지 않는 차량에 대해서는 빈 배열을 반환한다.")
-        @Sql("classpath:db/trim/trims-data.sql")
         void findByCarIdWithoutResult() {
             //given
             Long targetCarId = Long.MAX_VALUE;
@@ -119,7 +116,7 @@ class TrimMapperTest {
 
         @Test
         @DisplayName("존재하지 않는 trim에 대해서는 빈 배열을 반환한다.")
-        @Sql("classpath:db/trim/trims-data.sql")
+        @Sql("classpath:db/trim/external-color-data.sql")
         void findExternalColorNotExists() {
             //given
             Long trimId = Long.MAX_VALUE;
@@ -152,7 +149,7 @@ class TrimMapperTest {
 
         @Test
         @DisplayName("존재하지 않는 trim에 대해서는 빈 배열을 반환한다.")
-        @Sql("classpath:db/trim/trims-data.sql")
+        @Sql("classpath:db/trim/internal-color-data.sql")
         void findInternalColorNotExists() {
             //given
             Long trimId = Long.MAX_VALUE;
