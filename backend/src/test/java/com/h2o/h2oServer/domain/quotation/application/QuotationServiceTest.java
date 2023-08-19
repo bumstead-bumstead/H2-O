@@ -14,15 +14,14 @@ import com.h2o.h2oServer.domain.option.mapper.OptionMapper;
 import com.h2o.h2oServer.domain.optionPackage.exception.NoSuchPackageException;
 import com.h2o.h2oServer.domain.optionPackage.mapper.PackageMapper;
 import com.h2o.h2oServer.domain.quotation.dto.QuotationRequestDto;
-import com.h2o.h2oServer.domain.quotation.dto.QuotationResponseDto;
 import com.h2o.h2oServer.domain.quotation.mapper.QuotationMapper;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
+import com.h2o.h2oServer.domain.trim.mapper.ExternalColorMapper;
 import com.h2o.h2oServer.domain.trim.mapper.TrimMapper;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
-import org.springframework.test.context.jdbc.Sql;
 
 import static com.h2o.h2oServer.domain.quotation.QuotationFixture.generateQuotationRequestDto;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,6 +39,7 @@ class QuotationServiceTest {
     private static OptionMapper optionMapper;
     private static PackageMapper packageMapper;
     private static QuotationService quotationService;
+    private static ExternalColorMapper externalColorMapper;
     private static SoftAssertions softly;
 
     @BeforeAll
@@ -52,6 +52,7 @@ class QuotationServiceTest {
         drivetrainMapper = Mockito.mock(DrivetrainMapper.class);
         optionMapper = Mockito.mock(OptionMapper.class);
         packageMapper = Mockito.mock(PackageMapper.class);
+        externalColorMapper = Mockito.mock(ExternalColorMapper.class);
         quotationService = new QuotationService(quotationMapper,
                 carMapper,
                 trimMapper,
@@ -59,7 +60,8 @@ class QuotationServiceTest {
                 bodytypeMapper,
                 drivetrainMapper,
                 optionMapper,
-                packageMapper);
+                packageMapper,
+                externalColorMapper);
         softly = new SoftAssertions();
     }
 

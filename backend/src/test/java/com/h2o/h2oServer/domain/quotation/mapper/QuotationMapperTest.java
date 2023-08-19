@@ -4,6 +4,7 @@ import com.h2o.h2oServer.domain.quotation.dto.QuotationDto;
 import com.h2o.h2oServer.domain.quotation.dto.QuotationRequestDto;
 import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationEntity;
 import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationEntity;
+import com.h2o.h2oServer.domain.quotation.entity.ReleaseEntity;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,10 +12,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static com.h2o.h2oServer.domain.quotation.QuotationFixture.generateQuotationRequestDto;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @MybatisTest
 class QuotationMapperTest {
@@ -84,5 +87,43 @@ class QuotationMapperTest {
             softly.assertThat(quotationMapper.countPackageQuotation())
                     .isEqualTo(2L);
         }
+    }
+    
+    @Test
+    @DisplayName("동일한 출고 견적의 데이터와 갯수 정보를 반환한다.")
+    @Sql("classpath:db/quotation/release-data.sql")
+    void findReleaseQuotationWithVolume() {
+        //given
+        long trimId = 2L;
+        ReleaseEntity expectedReleaseEntity = ReleaseEntity.builder()
+                .powertrainId(2L)
+                .bodytypeId(2L)
+                .drivetrainId(2L)
+                .internalColorId(2L)
+                .externalColorId(2L)
+                .price(35000)
+                .trimId(2L)
+                .quotationCount(2)
+                .optionCombination("1,4")
+                .packageCombination("3")
+                .build();
+        ReleaseEntity expectedReleaseEntity2 = ReleaseEntity.builder()
+                .powertrainId(1L)
+                .bodytypeId(1L)
+                .drivetrainId(1L)
+                .internalColorId(1L)
+                .externalColorId(1L)
+                .price(30000)
+                .trimId(2L)
+                .quotationCount(1)
+                .optionCombination("1")
+                .packageCombination("1,2")
+                .build();
+        //when
+        List<ReleaseEntity> actualReleaseEntities = quotationMapper.findReleaseQuotationWithVolume(trimId);
+
+        //then
+        assertThat(actualReleaseEntities).contains(expectedReleaseEntity)
+                .contains(expectedReleaseEntity2);
     }
 }
