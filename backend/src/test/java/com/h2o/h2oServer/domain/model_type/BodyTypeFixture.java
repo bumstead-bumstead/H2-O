@@ -5,7 +5,7 @@ import com.h2o.h2oServer.domain.model_type.Entity.CarBodytypeEntity;
 
 import java.util.List;
 
-public class CarBodyTypeFixture {
+public class BodyTypeFixture {
 
     public static BodytypeEntity generateBodytypeEntity() {
         return BodytypeEntity.builder()

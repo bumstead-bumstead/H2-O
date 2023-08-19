@@ -1,6 +1,6 @@
 package com.h2o.h2oServer.domain.model_type.mapper;
 
-import com.h2o.h2oServer.domain.model_type.CarBodyTypeFixture;
+import com.h2o.h2oServer.domain.model_type.BodyTypeFixture;
 import com.h2o.h2oServer.domain.model_type.Entity.BodytypeEntity;
 import com.h2o.h2oServer.domain.model_type.Entity.CarBodytypeEntity;
 import org.assertj.core.api.SoftAssertions;
@@ -32,7 +32,7 @@ class BodytypeMapperTest {
     void findById() {
         //given
         Long bodytypeId = 1L;
-        BodytypeEntity bodytype = CarBodyTypeFixture.generateBodytypeEntity();
+        BodytypeEntity bodytype = BodyTypeFixture.generateBodytypeEntity();
 
         //when
         BodytypeEntity foundBodytype = bodytypeMapper.findById(bodytypeId);
@@ -48,7 +48,7 @@ class BodytypeMapperTest {
     void findBodytypeByCarId() {
         //given
         Long carId = 1L;
-        List<CarBodytypeEntity> expectedCarBodytypeEntities = CarBodyTypeFixture.generateCarBodyTypeEntities();
+        List<CarBodytypeEntity> expectedCarBodytypeEntities = BodyTypeFixture.generateCarBodyTypeEntities();
 
         //when
         List<CarBodytypeEntity> foundEntities = bodytypeMapper.findBodytypesByCarId(carId);
