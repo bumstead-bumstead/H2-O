@@ -5,13 +5,15 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(TrimController.class)
+@WebMvcTest(controllers = TrimController.class)
 class TrimControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
     private TrimService trimService;
 
     @BeforeEach
@@ -19,21 +21,16 @@ class TrimControllerTest {
         trimService = Mockito.mock(TrimService.class);
     }
 
-//    @Nested
-//    @DisplayName("트림 정보 조회 테스트")
-//    class getTrimInformationTest {
+    @Nested
+    @DisplayName("트림 정보 조회 테스트")
+    class getTrimInformationTest {
 
-//        @Test
-//        @DisplayName("존재하는 trim 요청에 대해서 유효한 값을 갖는 TrimDto를 응답한다.")
-//        void withValidTrimId() {
-//            //given
-////            mockMvc.perform(MockMvcRequestBuilders.get("car/{carId}/trim", 2L))
-////                    .andExpect(MockMvcResultMatchers.status().isOk())
-////                    .andExpect(MockMvcResultMatchers.content().string("Expected Response Body"));
-//            //when
-//
-//            //then
-//        }
-//    }
-
+        @Test
+        @DisplayName("존재하는 trim 요청에 대해서 유효한 값을 갖는 TrimDto를 응답한다.")
+        void withValidTrimId() throws Exception {
+            //given
+            //when
+            //then
+        }
+    }
 }
