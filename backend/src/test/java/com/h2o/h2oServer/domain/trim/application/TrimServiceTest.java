@@ -8,13 +8,8 @@ import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.PriceRangeDto;
 import com.h2o.h2oServer.domain.trim.dto.TrimDto;
 import com.h2o.h2oServer.domain.trim.dto.*;
-import com.h2o.h2oServer.domain.trim.entity.ExternalColorEntity;
-import com.h2o.h2oServer.domain.trim.entity.ImageEntity;
-import com.h2o.h2oServer.domain.trim.entity.OptionStatisticsEntity;
-import com.h2o.h2oServer.domain.trim.entity.TrimEntity;
 import com.h2o.h2oServer.domain.trim.mapper.ExternalColorMapper;
 import com.h2o.h2oServer.domain.trim.mapper.TrimMapper;
-import com.h2o.h2oServer.domain.trim.entity.InternalColorEntity;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -22,6 +17,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.h2o.h2oServer.domain.option.OptionFixture.generateOptionStatisticsList;
+import static com.h2o.h2oServer.domain.trim.ExternalColorFixture.generateExternalColorEntityList;
+import static com.h2o.h2oServer.domain.trim.ImageFixture.generateImageEntityList;
+import static com.h2o.h2oServer.domain.trim.InternalColorFixture.generateInernalColorEntityList;
+import static com.h2o.h2oServer.domain.trim.TrimFixture.generateTrimEntity;
+import static com.h2o.h2oServer.domain.trim.TrimFixture.generateTrimEntityList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -118,69 +119,6 @@ class TrimServiceTest {
                 .isInstanceOf(NoSuchTrimException.class);
     }
 
-    private static List<ExternalColorEntity> generateExternalColorEntityList() {
-        return List.of(
-                ExternalColorEntity.builder()
-                        .id(1L)
-                        .name("Red")
-                        .colorCode("#FF0000")
-                        .choiceRatio(0.5F)
-                        .price(100)
-                        .build(),
-                ExternalColorEntity.builder()
-                        .id(2L)
-                        .name("Black")
-                        .colorCode("#FF0001")
-                        .choiceRatio(0.2F)
-                        .price(240)
-                        .build());
-    }
-
-    private static List<ImageEntity> generateImageEntityList() {
-        return List.of(
-                ImageEntity.builder()
-                        .image("url1")
-                        .id(1L)
-                        .build(),
-                ImageEntity.builder()
-                        .image("url2")
-                        .id(2L)
-                        .build()
-        );
-    }
-
-    private List<OptionStatisticsEntity> generateOptionStatisticsList() {
-        return List.of(
-                OptionStatisticsEntity.builder()
-                        .id(1L)
-                        .name("Option A")
-                        .useCount(0.75F)
-                        .build(),
-                OptionStatisticsEntity.builder()
-                        .id(2L)
-                        .name("Option B")
-                        .useCount(0.5F)
-                        .build()
-        );
-    }
-
-    private List<TrimEntity> generateTrimEntityList() {
-        return List.of(
-                TrimEntity.builder()
-                        .id(1L)
-                        .name("Trim A")
-                        .description("Description of Trim A")
-                        .price(50000)
-                        .build(),
-                TrimEntity.builder()
-                        .id(2L)
-                        .name("Trim B")
-                        .description("Description of Trim b")
-                        .price(70000)
-                        .build()
-        );
-    }
-
     @Test
     @DisplayName("trimId에 해당하는 internalColor를 Dto로 포매팅해서 반환한다.")
     void findInternalColorInformation() {
@@ -202,27 +140,6 @@ class TrimServiceTest {
                 .isEqualTo("Blue");
     }
 
-    private List<InternalColorEntity> generateInernalColorEntityList() {
-        return List.of(
-                InternalColorEntity.builder()
-                        .id(1L)
-                        .choiceRatio(0.3f)
-                        .price(2000)
-                        .fabricImage("fabric_image_url_1")
-                        .internalImage("internal_image_url_1")
-                        .name("Red")
-                        .build(),
-                InternalColorEntity.builder()
-                        .id(2L)
-                        .choiceRatio(0.2f)
-                        .price(1500)
-                        .fabricImage("fabric_image_url_2")
-                        .internalImage("internal_image_url_2")
-                        .name("Blue")
-                        .build()
-        );
-    }
-
     @Test
     @DisplayName("트림의 가격 범위를 반환한다.")
     void findPriceRange() {
@@ -233,7 +150,7 @@ class TrimServiceTest {
         when(trimMapper.findMaximumComponentPrice(trimId)).thenReturn(20000);
         when(carMapper.findMaximumModelTypePrice(carId)).thenReturn(10000);
         when(carMapper.findMinimumModelTypePrice(carId)).thenReturn(0);
-        PriceRangeDto expectedPriceRange = PriceRangeDto.of(20000 + 30000000 + 10000, 30000000);
+        PriceRangeDto expectedPriceRange = PriceRangeDto.of(20000 + 50000 + 10000, 50000);
 
         //when
         PriceRangeDto actualPriceRange = trimService.findPriceRange(trimId);
@@ -255,7 +172,7 @@ class TrimServiceTest {
         int unit = 10000000 / 30;
 
         for (int index = 0; index < 30; index++) {
-            when(trimMapper.findQuantityBetween(trimId, 30000000 + unit * index, 30000000 + unit * (index + 1))).thenReturn(5);
+            when(trimMapper.findQuantityBetween(trimId, 50000 + unit * index, 50000 + unit * (index + 1))).thenReturn(5);
         }
 
         //when
@@ -266,15 +183,5 @@ class TrimServiceTest {
         softly.assertThat(actualDto.getQuantityPerUnit()).hasSize(30);
         softly.assertThat(actualDto.getQuantityPerUnit()).allMatch(quantity -> quantity == 5);
         softly.assertAll();
-    }
-
-    private static TrimEntity generateTrimEntity(long carId) {
-        return TrimEntity.builder()
-                .id(1L)
-                .name("Trim A")
-                .description("Description of Trim A")
-                .price(30000000)
-                .carId(carId)
-                .build();
     }
 }

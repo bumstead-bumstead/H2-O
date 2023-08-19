@@ -1,6 +1,7 @@
 package com.h2o.h2oServer.domain.trim.mapper;
 
 import com.h2o.h2oServer.domain.trim.ExternalColorFixture;
+import com.h2o.h2oServer.domain.trim.InternalColorFixture;
 import com.h2o.h2oServer.domain.trim.TrimFixture;
 import com.h2o.h2oServer.domain.trim.entity.ExternalColorEntity;
 import com.h2o.h2oServer.domain.trim.entity.InternalColorEntity;
@@ -66,20 +67,6 @@ class TrimMapperTest {
         //given
         Long targetCarId = 1L;
         List<TrimEntity> expectedTrimEntities = TrimFixture.generateTrimEntityList();
-        TrimEntity expectedTrimEntity1 = TrimEntity.builder()
-                .id(1L)
-                .name("Trim 1")
-                .description("Basic Trim")
-                .price(1500)
-                .carId(1L)
-                .build();
-        TrimEntity expectedTrimEntity2 = TrimEntity.builder()
-                .id(2L)
-                .name("Trim 2")
-                .description("Advanced Trim")
-                .price(2500)
-                .carId(1L)
-                .build();
 
         //when
         List<TrimEntity> actualTrimEntities = trimMapper.findByCarId(targetCarId);
@@ -145,22 +132,7 @@ class TrimMapperTest {
     void findInternalColor() {
         //given
         Long trimId = 1L;
-        InternalColorEntity expectEntity1 = InternalColorEntity.builder()
-                .id(1L)
-                .choiceRatio(0.3f)
-                .price(2000)
-                .fabricImage("fabric_image_url_1")
-                .internalImage("internal_image_url_1")
-                .name("Red")
-                .build();
-        InternalColorEntity expectEntity2 = InternalColorEntity.builder()
-                .id(2L)
-                .choiceRatio(0.2f)
-                .price(1500)
-                .fabricImage("fabric_image_url_2")
-                .internalImage("internal_image_url_2")
-                .name("Blue")
-                .build();
+        List<InternalColorEntity> expectedInternalColorEntities = InternalColorFixture.generateInernalColorEntityList();
 
         //when
         List<InternalColorEntity> actualEntities = trimMapper.findInternalColor(trimId);
@@ -169,8 +141,7 @@ class TrimMapperTest {
         softly.assertThat(actualEntities).as("유효한 데이터가 매핑되었는지 확인").isNotEmpty();
         softly.assertThat(actualEntities).as("유효한 데이터만 매핑되었는지 확인").hasSize(2);
         softly.assertThat(actualEntities).as("trimId에 해당하는 InternalColorEntity 객체가 모두 매핑되었는지 확인")
-                .contains(expectEntity1)
-                .contains(expectEntity2);
+                .containsAll(expectedInternalColorEntities);
         softly.assertAll();
     }
 
