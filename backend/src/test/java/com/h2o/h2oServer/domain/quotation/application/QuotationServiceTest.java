@@ -24,8 +24,7 @@ import org.mockito.Mockito;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.List;
-
+import static com.h2o.h2oServer.domain.quotation.QuotationFixture.generateQuotationRequestDto;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
@@ -89,7 +88,7 @@ class QuotationServiceTest {
 
             //when
             //then
-            assertThatThrownBy(() -> quotationService.saveQuotation(createMockRequest()))
+            assertThatThrownBy(() -> quotationService.saveQuotation(generateQuotationRequestDto()))
                     .isInstanceOf(NoSuchCarException.class);
         }
 
@@ -101,7 +100,7 @@ class QuotationServiceTest {
 
             //when
             //then
-            assertThatThrownBy(() -> quotationService.saveQuotation(createMockRequest()))
+            assertThatThrownBy(() -> quotationService.saveQuotation(generateQuotationRequestDto()))
                     .isInstanceOf(NoSuchTrimException.class);
         }
 
@@ -113,7 +112,7 @@ class QuotationServiceTest {
 
             //when
             //then
-            assertThatThrownBy(() -> quotationService.saveQuotation(createMockRequest()))
+            assertThatThrownBy(() -> quotationService.saveQuotation(generateQuotationRequestDto()))
                     .isInstanceOf(NoSuchPowertrainException.class);
         }
 
@@ -125,7 +124,7 @@ class QuotationServiceTest {
 
             //when
             //then
-            assertThatThrownBy(() -> quotationService.saveQuotation(createMockRequest()))
+            assertThatThrownBy(() -> quotationService.saveQuotation(generateQuotationRequestDto()))
                     .isInstanceOf(NoSuchBodyTypeException.class);
         }
 
@@ -137,7 +136,7 @@ class QuotationServiceTest {
 
             //when
             //then
-            assertThatThrownBy(() -> quotationService.saveQuotation(createMockRequest()))
+            assertThatThrownBy(() -> quotationService.saveQuotation(generateQuotationRequestDto()))
                     .isInstanceOf(NoSuchDriveTrainException.class);
         }
 
@@ -149,7 +148,7 @@ class QuotationServiceTest {
 
             //when
             //then
-            assertThatThrownBy(() -> quotationService.saveQuotation(createMockRequest()))
+            assertThatThrownBy(() -> quotationService.saveQuotation(generateQuotationRequestDto()))
                     .isInstanceOf(NoSuchOptionException.class);
         }
 
@@ -161,46 +160,29 @@ class QuotationServiceTest {
 
             //when
             //then
-            assertThatThrownBy(() -> quotationService.saveQuotation(createMockRequest()))
+            assertThatThrownBy(() -> quotationService.saveQuotation(generateQuotationRequestDto()))
                     .isInstanceOf(NoSuchPackageException.class);
         }
     }
 
-//    @Test
-//    @Sql("classpath:db/quotation/quotation-tx-data.sql")
-//    @DisplayName("견적이 저장되지 못하면 롤백된다.")
-//    void transaction() {
-//        //given
-//        QuotationRequestDto request = createMockRequest();
-//
-//        //when
-//        QuotationResponseDto quotationResponseDto = quotationService.saveQuotation(request);
-//
-//        //then
-//        softly.assertThat(quotationMapper.countQuotation())
-//                .as("id 충돌로 인해 Quotation 테이블에 대한 롤백이 일어난다.")
-//                .isEqualTo(0L);
-//        softly.assertThat(quotationResponseDto)
-//                .as("롤백되면 응답 객체가 생성되지 않는다.")
-//                .isNull();
-//        softly.assertAll();
-//    }
+    @Disabled
+    @Test
+    @Sql("classpath:db/quotation/quotation-tx-data.sql")
+    @DisplayName("견적이 저장되지 못하면 롤백된다.")
+    void transaction() {
+        //given
+        QuotationRequestDto request = generateQuotationRequestDto();
 
-    private QuotationRequestDto createMockRequest() {
-        ModelTypeIdDto modelTypeId = new ModelTypeIdDto();
-        modelTypeId.setPowertrainId(1L);
-        modelTypeId.setBodytypeId(2L);
-        modelTypeId.setDrivetrainId(3L);
+        //when
+        QuotationResponseDto quotationResponseDto = quotationService.saveQuotation(request);
 
-        QuotationRequestDto request = new QuotationRequestDto();
-        request.setCarId(4L);
-        request.setTrimId(5L);
-        request.setModelTypeIds(modelTypeId);
-        request.setInternalColorId(6L);
-        request.setExternalColorId(7L);
-        request.setOptionIds(List.of(8L, 9L, 10L));
-        request.setPackageIds(List.of(11L));
-
-        return request;
+        //then
+        softly.assertThat(quotationMapper.countQuotation())
+                .as("id 충돌로 인해 Quotation 테이블에 대한 롤백이 일어난다.")
+                .isEqualTo(0L);
+        softly.assertThat(quotationResponseDto)
+                .as("롤백되면 응답 객체가 생성되지 않는다.")
+                .isNull();
+        softly.assertAll();
     }
 }
