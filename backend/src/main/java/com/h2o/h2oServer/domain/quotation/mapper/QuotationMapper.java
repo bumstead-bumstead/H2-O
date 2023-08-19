@@ -9,9 +9,14 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface QuotationMapper {
     void saveQuotation(QuotationDto quotationDTO);
+
     void saveOptionQuotation(OptionQuotationEntity optionQuotationEntity);
+
     void savePackageQuotation(PackageQuotationEntity packageQuotationEntity);
+
     long countQuotation();
+
     long countOptionQuotation();
+
     long countPackageQuotation();
 }
