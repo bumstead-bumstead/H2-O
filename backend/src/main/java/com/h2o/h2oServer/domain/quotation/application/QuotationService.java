@@ -42,8 +42,8 @@ import static com.h2o.h2oServer.global.util.StringParser.*;
 public class QuotationService {
     public static final double SIMILARITY_LOWER_BOUND = 0.2;
     public static final double SIMILARITY_UPPER_BOUND = 0.9;
-    private final QuotationMapper quotationMapper;
 
+    private final QuotationMapper quotationMapper;
     private final CarMapper carMapper;
     private final TrimMapper trimMapper;
     private final PowertrainMapper powertrainMapper;
