@@ -1,5 +1,7 @@
 package com.h2o.h2oServer.domain.trim.mapper;
 
+import com.h2o.h2oServer.domain.trim.ExternalColorFixture;
+import com.h2o.h2oServer.domain.trim.TrimFixture;
 import com.h2o.h2oServer.domain.trim.entity.ExternalColorEntity;
 import com.h2o.h2oServer.domain.trim.entity.InternalColorEntity;
 import com.h2o.h2oServer.domain.trim.entity.TrimEntity;
@@ -32,13 +34,7 @@ class TrimMapperTest {
     void findById() {
         //given
         Long targetId = 1L;
-        TrimEntity expectedTrimEntity = TrimEntity.builder()
-                .id(targetId)
-                .name("Trim 1")
-                .description("Basic Trim")
-                .price(1500)
-                .carId(1L)
-                .build();
+        TrimEntity expectedTrimEntity = TrimFixture.generateTrimEntity();
 
         //when
         TrimEntity actualTrimEntity = trimMapper.findById(targetId);
@@ -69,6 +65,7 @@ class TrimMapperTest {
     void findByCarId() {
         //given
         Long targetCarId = 1L;
+        List<TrimEntity> expectedTrimEntities = TrimFixture.generateTrimEntityList();
         TrimEntity expectedTrimEntity1 = TrimEntity.builder()
                 .id(1L)
                 .name("Trim 1")
@@ -91,8 +88,7 @@ class TrimMapperTest {
         softly.assertThat(actualTrimEntities).as("유효한 데이터가 매핑되었는지 확인").isNotEmpty();
         softly.assertThat(actualTrimEntities).as("유효한 데이터만 매핑되었는지 확인").hasSize(2);
         softly.assertThat(actualTrimEntities).as("CarId에 해당하는 trim 객체가 모두 매핑되었는지 확인")
-                .contains(expectedTrimEntity1)
-                .contains(expectedTrimEntity2);
+                .containsAll(expectedTrimEntities);
         softly.assertAll();
     }
 
@@ -130,20 +126,7 @@ class TrimMapperTest {
     void findExternalColor() {
         //given
         Long trimId = 1L;
-        ExternalColorEntity expectedExternalColorEntity1 = ExternalColorEntity.builder()
-                .colorCode("#FF0000")
-                .choiceRatio(0.3f)
-                .id(1L)
-                .name("Red")
-                .price(2000)
-                .build();
-        ExternalColorEntity expectedExternalColorEntity2 = ExternalColorEntity.builder()
-                .colorCode("#0000FF")
-                .choiceRatio(0.5f)
-                .id(2L)
-                .name("Blue")
-                .price(1800)
-                .build();
+        List<ExternalColorEntity> expectedExternalColorEntities = ExternalColorFixture.generateExternalColorEntityList();
 
         //when
         List<ExternalColorEntity> actualExternalColorEntities = trimMapper.findExternalColor(trimId);
@@ -152,8 +135,7 @@ class TrimMapperTest {
         assertThat(actualExternalColorEntities).as("유효한 데이터가 매핑된다.").isNotEmpty();
         assertThat(actualExternalColorEntities).as("유효한 데이터가 매핑된다.").hasSize(2);
         softly.assertThat(actualExternalColorEntities).as("trimId에 해당하는 externalColorEntity 객체가 모두 매핑되었는지 확인")
-                .contains(expectedExternalColorEntity1)
-                .contains(expectedExternalColorEntity2);
+                .containsAll(expectedExternalColorEntities);
         softly.assertAll();
     }
 
