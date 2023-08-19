@@ -1,9 +1,9 @@
 package com.h2o.h2oServer.domain.option.mapper;
 
+import com.h2o.h2oServer.domain.option.HashTagFixture;
+import com.h2o.h2oServer.domain.option.OptionFixture;
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
 import com.h2o.h2oServer.domain.option.entity.OptionDetailsEntity;
-import com.h2o.h2oServer.domain.option.entity.enums.HashTag;
-import com.h2o.h2oServer.domain.option.entity.enums.OptionCategory;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,16 +29,7 @@ class OptionMapperTest {
         //given
         Long trimId = 1L;
         Long optionId = 1L;
-        OptionDetailsEntity expectedOptionDetailsEntity = OptionDetailsEntity.builder()
-                .name("Option 1")
-                .image("image_url_1")
-                .description("Description for Option 1")
-                .choiceRatio(0.3f)
-                .useCount(12.5f)
-                .category(OptionCategory.POWERTRAIN_PERFORMANCE)
-                .price(500)
-                .optionType("default")
-                .build();
+        OptionDetailsEntity expectedOptionDetailsEntity = OptionFixture.generateOptionDetailsEntity();
 
         //when
         OptionDetailsEntity actualOptionDetailsEntity = optionMapper.findOptionDetails(optionId, trimId);
@@ -55,17 +46,7 @@ class OptionMapperTest {
     void findHashTag() {
         //given
         Long optionId = 1L;
-        List<HashTagEntity> expectedHashTagEntities = List.of(
-                HashTagEntity.builder()
-                        .name(HashTag.CAMPING)
-                        .build(),
-                HashTagEntity.builder()
-                        .name(HashTag.LEISURE)
-                        .build(),
-                HashTagEntity.builder()
-                        .name(HashTag.SPORTS)
-                        .build()
-        );
+        List<HashTagEntity> expectedHashTagEntities = HashTagFixture.generateHashTagEntities();
 
         //when
         List<HashTagEntity> actualHashTagEntities = optionMapper.findHashTag(optionId);
