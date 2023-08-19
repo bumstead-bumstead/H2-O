@@ -10,8 +10,12 @@ import java.util.List;
 @Mapper
 public interface OptionsMapper {
     List<TrimExtraOptionEntity> findTrimPackages(Long trimId);
+
     List<TrimExtraOptionEntity> findTrimExtraOptions(Long trimId);
+
     List<TrimDefaultOptionEntity> findTrimDefaultOptions(Long trimId);
+
     List<HashTagEntity> findPackageHashTags(Long packageId);
+
     List<HashTagEntity> findOptionHashTag(Long optionId);
 }
