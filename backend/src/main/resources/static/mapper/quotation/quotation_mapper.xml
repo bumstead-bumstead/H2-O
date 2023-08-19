@@ -67,7 +67,8 @@
                            price,
                            GROUP_CONCAT(o.option_id ORDER BY o.option_id ASC) AS option_combination
                     from sold_car
-                             join sold_car_extra_options as o on (sold_car.trim_id = #{trimId} and sold_car.id = o.sold_car_id)
+                             join sold_car_extra_options as o
+                                  on (sold_car.trim_id = #{trimId} and sold_car.id = o.sold_car_id)
                     group by id) as option_concatted
                        join sold_car_package as p on (option_concatted.id = p.sold_car_id)
               group by id) as all_concatted
