@@ -42,6 +42,7 @@ import static com.h2o.h2oServer.global.util.StringParser.*;
 public class QuotationService {
     public static final double SIMILARITY_LOWER_BOUND = 0.2;
     public static final double SIMILARITY_UPPER_BOUND = 0.9;
+    public static final int SIDE_IMAGE_INDEX = 12;
 
     private final QuotationMapper quotationMapper;
     private final CarMapper carMapper;
@@ -101,7 +102,7 @@ public class QuotationService {
             String powertrainName = powertrainMapper.findById(releaseEntity.getPowertrainId()).getName();
             String bodytypeName = bodytypeMapper.findById(releaseEntity.getBodytypeId()).getName();
             String drivetrainName = drivetrainMapper.findById(releaseEntity.getDrivetrainId()).getName();
-            String image = externalColorMapper.findImages(releaseEntity.getExternalColorId()).get(30).getImage();
+            String image = externalColorMapper.findImages(releaseEntity.getExternalColorId()).get(SIDE_IMAGE_INDEX).getImage();
             int price = releaseEntity.getPrice();
 
             List<OptionSummaryDto> optionSummaryDtos = extractOptionSummary(quotationRequestDto, releaseEntity);
