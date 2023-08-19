@@ -1,6 +1,7 @@
 package com.h2o.h2oServer.domain.option;
 
 import com.h2o.h2oServer.domain.option.entity.OptionDetailsEntity;
+import com.h2o.h2oServer.domain.option.entity.OptionEntity;
 import com.h2o.h2oServer.domain.option.entity.enums.OptionCategory;
 import com.h2o.h2oServer.domain.trim.entity.OptionStatisticsEntity;
 
@@ -32,6 +33,16 @@ public class OptionFixture {
                 .category(OptionCategory.POWERTRAIN_PERFORMANCE)
                 .price(500)
                 .optionType("default")
+                .build();
+    }
+
+    public static OptionEntity generateOptionEntity() {
+        return OptionEntity.builder()
+                .name("Option 1")
+                .image("image_url_1")
+                .description("Description for Option 1")
+                .useCount(12.5f)
+                .category(OptionCategory.POWERTRAIN_PERFORMANCE)
                 .build();
     }
 }
