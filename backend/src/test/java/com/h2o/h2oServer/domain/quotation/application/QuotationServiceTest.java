@@ -14,6 +14,7 @@ import com.h2o.h2oServer.domain.option.mapper.OptionMapper;
 import com.h2o.h2oServer.domain.optionPackage.exception.NoSuchPackageException;
 import com.h2o.h2oServer.domain.optionPackage.mapper.PackageMapper;
 import com.h2o.h2oServer.domain.quotation.dto.QuotationRequestDto;
+import com.h2o.h2oServer.domain.quotation.dto.QuotationResponseDto;
 import com.h2o.h2oServer.domain.quotation.mapper.QuotationMapper;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
 import com.h2o.h2oServer.domain.trim.mapper.ExternalColorMapper;
@@ -22,6 +23,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static com.h2o.h2oServer.domain.quotation.QuotationFixture.generateQuotationRequestDto;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
