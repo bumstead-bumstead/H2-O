@@ -19,9 +19,6 @@ public class CosineSimilarityCalculator {
             throw new IllegalArgumentException("두 벡터의 길이가 다릅니다.");
         }
 
-        System.out.println(Arrays.toString(vector1));
-        System.out.println(Arrays.toString(vector2));
-
         double dotProduct = 0.0;
         double norm1 = 0.0;
         double norm2 = 0.0;
