@@ -1,11 +1,11 @@
 package com.h2o.h2oServer.domain.options.api;
 
-import com.h2o.h2oServer.domain.model_type.exception.NoSuchPowertrainException;
-import com.h2o.h2oServer.domain.option.OptionFixture;
-import com.h2o.h2oServer.domain.option.dto.OptionDto;
+import com.h2o.h2oServer.domain.option.HashTagFixture;
 import com.h2o.h2oServer.domain.option.entity.enums.OptionCategory;
 import com.h2o.h2oServer.domain.options.application.OptionsService;
+import com.h2o.h2oServer.domain.options.dto.TrimDefaultOptionDto;
 import com.h2o.h2oServer.domain.options.dto.TrimExtraOptionDto;
+import com.h2o.h2oServer.domain.options.entity.TrimDefaultOptionEntity;
 import com.h2o.h2oServer.domain.options.entity.TrimExtraOptionEntity;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.h2o.h2oServer.domain.option.HashTagFixture.generateHashTagEntities;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -111,12 +110,63 @@ class OptionsControllerTest {
         }
     }
 
-    @Test
-    void getExtraOptions() {
+    @Nested
+    @DisplayName("기본 옵션 조회 테스트")
+    class GetDefaultOptionsTest {
+        @Test
+        @DisplayName("존재하는 trim Id 요청일 경우 TrimDefaultOptionDto를 응답한다.")
+        void withValidTrim() throws Exception {
+            //given
+            Long trimId = 1L;
+            List<TrimDefaultOptionDto> expectedTrimDefaultOptionDto = List.of(
+                    TrimDefaultOptionDto.of(generateTrimDefaultOptionEntitiy(), HashTagFixture.generateHashTagEntities()),
+                    TrimDefaultOptionDto.of(generateTrimDefaultOptionEntitiy(), HashTagFixture.generateHashTagEntities())
+            );
+            when(optionsService.findTrimDefaultOptions(trimId)).thenReturn(expectedTrimDefaultOptionDto);
 
-    }
+            //when
+            mockMvc.perform(get("/trim/{trimId}/default-option", trimId))
+                    //then
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$").isArray())
+                    .andExpect(jsonPath("$.length()").value(expectedTrimDefaultOptionDto.size()))
+                    .andExpect(jsonPath("$[0].id").value(expectedTrimDefaultOptionDto.get(0).getId()))
+                    .andExpect(jsonPath("$[0].category").value(expectedTrimDefaultOptionDto.get(0).getCategory()))
+                    .andExpect(jsonPath("$[0].name").value(expectedTrimDefaultOptionDto.get(0).getName()))
+                    .andExpect(jsonPath("$[0].image").value(expectedTrimDefaultOptionDto.get(0).getImage()))
+                    .andExpect(jsonPath("$[0].hashTags").isArray())
+                    .andExpect(jsonPath("$[0].hashTags.length()").value(expectedTrimDefaultOptionDto.get(0).getHashTags().size()))
+                    .andExpect(jsonPath("$[0].containsHmgData").value(expectedTrimDefaultOptionDto.get(0).isContainsHmgData()))
+                    .andExpect(jsonPath("$[1].id").value(expectedTrimDefaultOptionDto.get(1).getId()))
+                    .andExpect(jsonPath("$[1].category").value(expectedTrimDefaultOptionDto.get(1).getCategory()))
+                    .andExpect(jsonPath("$[1].name").value(expectedTrimDefaultOptionDto.get(1).getName()));
+        }
 
-    @Test
-    void getDefaultOptions() {
+        @Test
+        @DisplayName("존재하지 않는 trim Id 요청에 대해서 NotFound로 응답한다.")
+        void withInvalidTrim() throws Exception {
+            //given
+            Long trimId = 1L;
+
+            when(optionsService.findTrimDefaultOptions(trimId)).thenThrow(new NoSuchTrimException());
+
+            //when
+            mockMvc.perform(get("/trim/{trimId}/default-option", trimId))
+                    //then
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+
+        private TrimDefaultOptionEntity generateTrimDefaultOptionEntitiy() {
+            return TrimDefaultOptionEntity.builder()
+                    .id(1L)
+                    .category(OptionCategory.CONVENIENCE)
+                    .name("name")
+                    .useCount(0.3f)
+                    .image("image")
+                    .build();
+        }
     }
 }
