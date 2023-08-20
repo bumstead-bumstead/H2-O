@@ -121,4 +121,44 @@ class TrimControllerTest {
                     .andExpect(status().isNotFound());
         }
     }
+
+    @Nested
+    @DisplayName("내부 색상 조회 테스트")
+    class GetInternalColorInformationTest {
+        @Test
+        @DisplayName("존재하는 trim 요청에 대해서 InternalColorDto를 응답한다.")
+        void withValidTrimId() throws Exception {
+            // given
+            Long trimId = 1L;
+
+            List<InternalColorDto> expectedInternalColorDtos = InternalColorFixture.generateInternalColorDtos();
+            when(trimService.findInternalColorInformation(trimId)).thenReturn(expectedInternalColorDtos);
+
+            // when
+            mockMvc.perform(get("/trim/{trimId}/internal-color", trimId))
+                    //then
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.length()").value(expectedInternalColorDtos.size()))
+                    .andExpect(jsonPath("$[0].id").value(expectedInternalColorDtos.get(0).getId()))
+                    .andExpect(jsonPath("$[0].name").value(expectedInternalColorDtos.get(0).getName()))
+                    .andExpect(jsonPath("$[0].choiceRatio").value(expectedInternalColorDtos.get(0).getChoiceRatio()))
+                    .andExpect(jsonPath("$[0].price").value(expectedInternalColorDtos.get(0).getPrice()))
+                    .andExpect(jsonPath("$[0].fabricImage").value(expectedInternalColorDtos.get(0).getFabricImage()))
+                    .andExpect(jsonPath("$[0].bannerImage").value(expectedInternalColorDtos.get(0).getBannerImage()));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 trim 요청에 대해서 NotFound로 응답한다.")
+        void withInvalidTrim() throws Exception {
+            //given
+            Long trimId = Long.MAX_VALUE;
+            when(trimService.findExternalColorInformation(trimId)).thenThrow(NoSuchTrimException.class);
+
+            //when
+            mockMvc.perform(get("/trim/{trimId}/external-color", trimId))
+                    //then
+                    .andExpect(status().isNotFound());
+        }
+    }
+
 }
