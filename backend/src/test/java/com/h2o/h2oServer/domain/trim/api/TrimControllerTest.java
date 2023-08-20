@@ -9,10 +9,7 @@ import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
 import com.h2o.h2oServer.domain.trim.ExternalColorFixture;
 import com.h2o.h2oServer.domain.trim.InternalColorFixture;
 import com.h2o.h2oServer.domain.trim.application.TrimService;
-import com.h2o.h2oServer.domain.trim.dto.DefaultTrimCompositionDto;
-import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
-import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
-import com.h2o.h2oServer.domain.trim.dto.TrimDto;
+import com.h2o.h2oServer.domain.trim.dto.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,12 +18,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.h2o.h2oServer.domain.trim.TrimFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,6 +58,7 @@ class TrimControllerTest {
             // when
             mockMvc.perform(get("/car/{carId}/trim", carId))
                     //then
+                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$").isArray())
                     .andExpect(jsonPath("$.length()").value(expectedTrimList.size()))
@@ -80,11 +80,12 @@ class TrimControllerTest {
         void withInvalidTrim() throws Exception {
             //given
             Long carId = Long.MAX_VALUE;
-            when(trimService.findTrimInformation(carId)).thenThrow(NoSuchCarException.class);
+            when(trimService.findTrimInformation(carId)).thenThrow(new NoSuchTrimException());
 
             //when
             mockMvc.perform(get("/car/{carId}/trim", carId))
                     //then
+                    .andDo(print())
                     .andExpect(status().isNotFound());
         }
     }
@@ -104,6 +105,7 @@ class TrimControllerTest {
             // when
             mockMvc.perform(get("/trim/{trimId}/external-color", trimId))
                     //then
+                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$").isArray())
                     .andExpect(jsonPath("$[0].id").value(expectedExternalColorDtos.get(0).getId()))
@@ -119,11 +121,12 @@ class TrimControllerTest {
         void withInvalidTrim() throws Exception {
             //given
             Long trimId = Long.MAX_VALUE;
-            when(trimService.findExternalColorInformation(trimId)).thenThrow(NoSuchTrimException.class);
+            when(trimService.findExternalColorInformation(trimId)).thenThrow(new NoSuchTrimException());
 
             //when
             mockMvc.perform(get("/trim/{trimId}/external-color", trimId))
                     //then
+                    .andDo(print())
                     .andExpect(status().isNotFound());
         }
     }
@@ -143,6 +146,7 @@ class TrimControllerTest {
             // when
             mockMvc.perform(get("/trim/{trimId}/internal-color", trimId))
                     //then
+                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.length()").value(expectedInternalColorDtos.size()))
                     .andExpect(jsonPath("$[0].id").value(expectedInternalColorDtos.get(0).getId()))
@@ -158,11 +162,12 @@ class TrimControllerTest {
         void withInvalidTrim() throws Exception {
             //given
             Long trimId = Long.MAX_VALUE;
-            when(trimService.findExternalColorInformation(trimId)).thenThrow(NoSuchTrimException.class);
+            when(trimService.findExternalColorInformation(trimId)).thenThrow(new NoSuchTrimException());
 
             //when
-            mockMvc.perform(get("/trim/{trimId}/external-color", trimId))
+            mockMvc.perform(get("/trim/{trimId}/internal-color", trimId))
                     //then
+                    .andDo(print())
                     .andExpect(status().isNotFound());
         }
     }
@@ -189,6 +194,7 @@ class TrimControllerTest {
             // when
             mockMvc.perform(get("/trim/{trimId}/default-composition", trimId))
                     //then
+                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.powertrain.id").value(expectedDefaultTrimCompositionDto.getPowertrain().getId()))
                     .andExpect(jsonPath("$.powertrain.name").value(expectedDefaultTrimCompositionDto.getPowertrain().getName()))
@@ -207,13 +213,94 @@ class TrimControllerTest {
         void withInvalidTrim() throws Exception {
             //given
             Long trimId = Long.MAX_VALUE;
-            when(trimService.findDefaultComposition(trimId)).thenThrow(NoSuchTrimException.class);
+            when(trimService.findDefaultComposition(trimId)).thenThrow(new NoSuchTrimException());
 
             //when
-            mockMvc.perform(get("/trim/{trimId}/default-composition-color", trimId))
+            mockMvc.perform(get("/trim/{trimId}/default-composition", trimId))
+                    //then
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("트림 가격 범위 정보 조회 테스트")
+    class getPriceRange {
+        @Test
+        @DisplayName("존재하는 trim 요청에 대해서 PriceRangeDto를 응답한다.")
+        void withValidTrimId() throws Exception {
+            // given
+            Long trimId = 1L;
+
+            PriceRangeDto expectedPriceRangeDto = PriceRangeDto.of(10000, 5000);
+
+            when(trimService.findPriceRange(trimId)).thenReturn(expectedPriceRangeDto);
+
+            // when
+            mockMvc.perform(get("/trim/{trimId}/price-range", trimId))
+                    //then
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.maxPrice").value(expectedPriceRangeDto.getMaxPrice()))
+                    .andExpect(jsonPath("$.minPrice").value(expectedPriceRangeDto.getMinPrice()));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 trim 요청에 대해서 NotFound로 응답한다.")
+        void withInvalidTrim() throws Exception {
+            //given
+            Long trimId = Long.MAX_VALUE;
+            when(trimService.findPriceRange(trimId)).thenThrow(new NoSuchTrimException());
+
+            //when
+            mockMvc.perform(get("/trim/{trimId}/price-range", trimId))
+                    .andDo(print())
                     //then
                     .andExpect(status().isNotFound());
         }
     }
 
+    @Nested
+    @DisplayName("트림 가격 분포 정보 조회 테스트")
+    class getPriceDistribution {
+        @Test
+        @DisplayName("존재하는 trim 요청에 대해서 PriceDistributionDto로 응답한다.")
+        void withValidTrimId() throws Exception {
+            // given
+            Long trimId = 1L;
+
+            PriceDistributionDto expectedPriceDistributionDto = PriceDistributionDto.of(5, Arrays.asList(5, 15, 20, 30, 25, 10));
+
+            when(trimService.findAndScalePriceDistribution(trimId)).thenReturn(expectedPriceDistributionDto);
+
+            // when
+            mockMvc.perform(get("/trim/{trimId}/price-distribution", trimId))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.unit").value(5))
+                    .andExpect(jsonPath("$.quantityPerUnit").isArray())
+                    .andExpect(jsonPath("$.quantityPerUnit.length()").value(expectedPriceDistributionDto.getQuantityPerUnit().size()))
+                    .andExpect(jsonPath("$.quantityPerUnit[0]").value(expectedPriceDistributionDto.getQuantityPerUnit().get(0)))
+                    .andExpect(jsonPath("$.quantityPerUnit[1]").value(expectedPriceDistributionDto.getQuantityPerUnit().get(1)))
+                    .andExpect(jsonPath("$.quantityPerUnit[2]").value(expectedPriceDistributionDto.getQuantityPerUnit().get(2)))
+                    .andExpect(jsonPath("$.quantityPerUnit[3]").value(expectedPriceDistributionDto.getQuantityPerUnit().get(3)))
+                    .andExpect(jsonPath("$.quantityPerUnit[4]").value(expectedPriceDistributionDto.getQuantityPerUnit().get(4)))
+                    .andExpect(jsonPath("$.quantityPerUnit[5]").value(expectedPriceDistributionDto.getQuantityPerUnit().get(5)));
+
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 trim 요청에 대해서 NotFound로 응답한다.")
+        void withInvalidTrim() throws Exception {
+            //given
+            Long trimId = Long.MAX_VALUE;
+            when(trimService.findPriceRange(trimId)).thenThrow(new NoSuchTrimException());
+
+            //when
+            mockMvc.perform(get("/trim/{trimId}/price-distribution", trimId))
+                    .andDo(print())
+                    //then
+                    .andExpect(status().isNotFound());
+        }
+    }
 }
