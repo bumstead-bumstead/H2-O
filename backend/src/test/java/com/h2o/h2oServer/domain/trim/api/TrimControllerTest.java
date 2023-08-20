@@ -1,7 +1,12 @@
 package com.h2o.h2oServer.domain.trim.api;
 
 import com.h2o.h2oServer.domain.car.exception.NoSuchCarException;
+import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
+import com.h2o.h2oServer.domain.trim.ExternalColorFixture;
+import com.h2o.h2oServer.domain.trim.InternalColorFixture;
 import com.h2o.h2oServer.domain.trim.application.TrimService;
+import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
+import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.TrimDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +78,45 @@ class TrimControllerTest {
 
             //when
             mockMvc.perform(get("/car/{carId}/trim", carId))
+                    //then
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("외부 색상 정보 조회 테스트")
+    class getExternalColorTest {
+        @Test
+        @DisplayName("존재하는 trim 요청에 대해서 ExternalColorDto를 응답한다.")
+        void withValidTrimId() throws Exception {
+            // given
+            Long trimId = 1L;
+
+            List<ExternalColorDto> expectedExternalColorDtos = ExternalColorFixture.generateExternalColorDtos();
+            when(trimService.findExternalColorInformation(any())).thenReturn(expectedExternalColorDtos);
+
+            // when
+            mockMvc.perform(get("/trim/{trimId}/external-color", trimId))
+                    //then
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$").isArray())
+                    .andExpect(jsonPath("$[0].id").value(expectedExternalColorDtos.get(0).getId()))
+                    .andExpect(jsonPath("$[0].name").value(expectedExternalColorDtos.get(0).getName()))
+                    .andExpect(jsonPath("$[0].choiceRatio").value(expectedExternalColorDtos.get(0).getChoiceRatio()))
+                    .andExpect(jsonPath("$[0].price").value(expectedExternalColorDtos.get(0).getPrice()))
+                    .andExpect(jsonPath("$[0].hexCode").value(expectedExternalColorDtos.get(0).getHexCode()))
+                    .andExpect(jsonPath("$[0].images").isArray());
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 trim 요청에 대해서 NotFound로 응답한다.")
+        void withInvalidTrim() throws Exception {
+            //given
+            Long trimId = Long.MAX_VALUE;
+            when(trimService.findExternalColorInformation(trimId)).thenThrow(NoSuchTrimException.class);
+
+            //when
+            mockMvc.perform(get("/trim/{trimId}/external-color", trimId))
                     //then
                     .andExpect(status().isNotFound());
         }
