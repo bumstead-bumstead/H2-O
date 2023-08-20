@@ -1,11 +1,10 @@
 package com.h2o.h2oServer.domain.model_type.api;
 
 import com.h2o.h2oServer.domain.car.exception.NoSuchCarException;
+import com.h2o.h2oServer.domain.model_type.Entity.TechnicalSpecEntity;
 import com.h2o.h2oServer.domain.model_type.application.ModelTypeService;
-import com.h2o.h2oServer.domain.model_type.dto.CarBodytypeDto;
-import com.h2o.h2oServer.domain.model_type.dto.CarDrivetrainDto;
-import com.h2o.h2oServer.domain.model_type.dto.CarPowertrainDto;
-import com.h2o.h2oServer.domain.model_type.dto.ModelTypeDto;
+import com.h2o.h2oServer.domain.model_type.dto.*;
+import com.h2o.h2oServer.domain.model_type.exception.NoSuchPowertrainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,8 +37,8 @@ class ModelTypeControllerTest {
     @DisplayName("모델 타입 정보 조회 테스트")
     class GetModelTypeTest {
         @Test
-        @DisplayName("존재하는 trim, option id 요청에 대해서 InternalColorDto를 응답한다.")
-        void withValidTrimId() throws Exception {
+        @DisplayName("존재하는 car Id 요청에 대해서 ModelTypeDto를 응답한다.")
+        void withValidCarId() throws Exception {
             // given
             Long carId = 1L;
 
@@ -91,7 +90,7 @@ class ModelTypeControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 car 요청에 대해서 NotFound로 응답한다.")
-        void withInvalidTrim() throws Exception {
+        void withInvalidCarId() throws Exception {
             //given
             Long carId = 1L;
 
@@ -99,6 +98,55 @@ class ModelTypeControllerTest {
 
             //when
             mockMvc.perform(get("/car/{carId}/model-type", carId))
+                    //then
+                    .andDo(print())
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("차랑 성능 정보 조회 테스트")
+    class GetTechnicalSpec {
+        @Test
+        @DisplayName("유효한 파워트레인, 구동방식 요청에 대해서 TechnicalSpecDto를 응답한다.")
+        void withValidRequest() throws Exception {
+            //when
+            int expectedDisplacement = 2000;
+            float expectedFuelEfficiency = 15.5f;
+            Long powertrainId = 1L;
+            Long drivetrainId = 2L;
+
+            when(modelTypeService.findTechnicalSpec(powertrainId, drivetrainId)).thenReturn(
+                    TechnicalSpecDto.of(TechnicalSpecEntity.builder()
+                            .displacement(expectedDisplacement)
+                            .fuelEfficiency(expectedFuelEfficiency)
+                            .drivetrainId(drivetrainId)
+                            .powertrainId(powertrainId)
+                            .build())
+            );
+
+            mockMvc.perform(get("/technical-spec")
+                            .param("powertrainId", powertrainId.toString())
+                            .param("drivetrainId", drivetrainId.toString()))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.displacement").value(expectedDisplacement))
+                    .andExpect(jsonPath("$.fuelEfficiency").value(expectedFuelEfficiency));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 파워트레인, 구동방식 조합 요청에 대해서 NotFound로 응답한다.")
+        void withInvalidTrim() throws Exception {
+            //given
+            Long powertrainId = 1L;
+            Long drivetrainId = 2L;
+
+            when(modelTypeService.findTechnicalSpec(powertrainId, drivetrainId)).thenThrow(new NoSuchPowertrainException());
+
+            //when
+            mockMvc.perform(get("/technical-spec")
+                            .param("powertrainId", powertrainId.toString())
+                            .param("drivetrainId", drivetrainId.toString()))
                     //then
                     .andDo(print())
                     .andExpect(status().isNotFound());
