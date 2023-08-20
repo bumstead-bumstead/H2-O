@@ -2,11 +2,11 @@ package com.h2o.h2oServer.domain.model_type;
 
 import com.h2o.h2oServer.domain.model_type.Entity.BodytypeEntity;
 import com.h2o.h2oServer.domain.model_type.Entity.CarBodytypeEntity;
+import com.h2o.h2oServer.domain.model_type.dto.CarBodytypeDto;
 
 import java.util.List;
 
 public class BodyTypeFixture {
-
     public static BodytypeEntity generateBodytypeEntity() {
         return BodytypeEntity.builder()
                 .id(1L)
@@ -48,5 +48,9 @@ public class BodyTypeFixture {
                         .choiceRatio(0.21f)
                         .build()
         );
+    }
+
+    public static CarBodytypeDto generateCarBodytypeDto() {
+        return CarBodytypeDto.of(generateCarBodyTypeEntity());
     }
 }
