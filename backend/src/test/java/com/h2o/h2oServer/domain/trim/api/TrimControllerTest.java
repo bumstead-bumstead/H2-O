@@ -1,10 +1,8 @@
 package com.h2o.h2oServer.domain.trim.api;
 
-import com.h2o.h2oServer.domain.car.exception.NoSuchCarException;
 import com.h2o.h2oServer.domain.model_type.BodyTypeFixture;
 import com.h2o.h2oServer.domain.model_type.DrivetrainFixture;
 import com.h2o.h2oServer.domain.model_type.PowertrainFixture;
-import com.h2o.h2oServer.domain.model_type.dto.CarPowertrainDto;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
 import com.h2o.h2oServer.domain.trim.ExternalColorFixture;
 import com.h2o.h2oServer.domain.trim.InternalColorFixture;
@@ -293,7 +291,7 @@ class TrimControllerTest {
         void withInvalidTrim() throws Exception {
             //given
             Long trimId = Long.MAX_VALUE;
-            when(trimService.findPriceRange(trimId)).thenThrow(new NoSuchTrimException());
+            when(trimService.findAndScalePriceDistribution(trimId)).thenThrow(new NoSuchTrimException());
 
             //when
             mockMvc.perform(get("/trim/{trimId}/price-distribution", trimId))

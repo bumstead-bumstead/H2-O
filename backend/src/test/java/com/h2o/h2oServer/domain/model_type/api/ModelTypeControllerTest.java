@@ -136,7 +136,7 @@ class ModelTypeControllerTest {
 
         @Test
         @DisplayName("존재하지 않는 파워트레인, 구동방식 조합 요청에 대해서 NotFound로 응답한다.")
-        void withInvalidTrim() throws Exception {
+        void withInvalidRequest() throws Exception {
             //given
             Long powertrainId = 1L;
             Long drivetrainId = 2L;
