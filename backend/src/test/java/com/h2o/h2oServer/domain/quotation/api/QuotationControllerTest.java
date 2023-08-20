@@ -149,7 +149,7 @@ class QuotationControllerTest {
             //given
             QuotationRequestDto requestDto = QuotationFixture.generateQuotationRequestDto();
             String jsonBody = objectMapper.writeValueAsString(requestDto);
-            when(quotationService.saveQuotation(requestDto)).thenThrow(exceptionType);
+            when(quotationService.findSimilarQuotations(requestDto)).thenThrow(exceptionType);
 
             //when
             mockMvc.perform(post("/quotation/similar")

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -162,7 +161,7 @@ class TrimControllerTest {
         void withInvalidTrim() throws Exception {
             //given
             Long trimId = Long.MAX_VALUE;
-            when(trimService.findExternalColorInformation(trimId)).thenThrow(new NoSuchTrimException());
+            when(trimService.findInternalColorInformation(trimId)).thenThrow(new NoSuchTrimException());
 
             //when
             mockMvc.perform(get("/trim/{trimId}/internal-color", trimId))
