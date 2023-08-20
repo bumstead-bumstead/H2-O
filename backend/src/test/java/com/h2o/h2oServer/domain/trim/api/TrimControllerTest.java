@@ -1,10 +1,15 @@
 package com.h2o.h2oServer.domain.trim.api;
 
 import com.h2o.h2oServer.domain.car.exception.NoSuchCarException;
+import com.h2o.h2oServer.domain.model_type.BodyTypeFixture;
+import com.h2o.h2oServer.domain.model_type.DrivetrainFixture;
+import com.h2o.h2oServer.domain.model_type.PowertrainFixture;
+import com.h2o.h2oServer.domain.model_type.dto.CarPowertrainDto;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
 import com.h2o.h2oServer.domain.trim.ExternalColorFixture;
 import com.h2o.h2oServer.domain.trim.InternalColorFixture;
 import com.h2o.h2oServer.domain.trim.application.TrimService;
+import com.h2o.h2oServer.domain.trim.dto.DefaultTrimCompositionDto;
 import com.h2o.h2oServer.domain.trim.dto.ExternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.InternalColorDto;
 import com.h2o.h2oServer.domain.trim.dto.TrimDto;
@@ -13,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -156,6 +162,55 @@ class TrimControllerTest {
 
             //when
             mockMvc.perform(get("/trim/{trimId}/external-color", trimId))
+                    //then
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("트림 기본 구성 정보 조회 테스트")
+    class getDefaultTrimCompositionTest {
+        @Test
+        @DisplayName("존재하는 trim 요청에 대해서 DefaultTrimCompositionDto를 응답한다.")
+        void withValidTrimId() throws Exception {
+            // given
+            Long trimId = 1L;
+
+            DefaultTrimCompositionDto expectedDefaultTrimCompositionDto = DefaultTrimCompositionDto.builder()
+                    .powertrain(PowertrainFixture.generateCarPowertrainDto())
+                    .bodytype(BodyTypeFixture.generateCarBodytypeDto())
+                    .drivetrain(DrivetrainFixture.generateCarDrivetrainDto())
+                    .internalColor(InternalColorFixture.generateInternalColorDtos().get(0))
+                    .externalColor(ExternalColorFixture.generateExternalColorDtos().get(0))
+                    .build();
+
+            when(trimService.findDefaultComposition(trimId)).thenReturn(expectedDefaultTrimCompositionDto);
+
+            // when
+            mockMvc.perform(get("/trim/{trimId}/default-composition", trimId))
+                    //then
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.powertrain.id").value(expectedDefaultTrimCompositionDto.getPowertrain().getId()))
+                    .andExpect(jsonPath("$.powertrain.name").value(expectedDefaultTrimCompositionDto.getPowertrain().getName()))
+                    .andExpect(jsonPath("$.bodytype.id").value(expectedDefaultTrimCompositionDto.getBodytype().getId()))
+                    .andExpect(jsonPath("$.bodytype.name").value(expectedDefaultTrimCompositionDto.getBodytype().getName()))
+                    .andExpect(jsonPath("$.drivetrain.id").value(expectedDefaultTrimCompositionDto.getDrivetrain().getId()))
+                    .andExpect(jsonPath("$.drivetrain.name").value(expectedDefaultTrimCompositionDto.getDrivetrain().getName()))
+                    .andExpect(jsonPath("$.internalColor.id").value(expectedDefaultTrimCompositionDto.getInternalColor().getId()))
+                    .andExpect(jsonPath("$.internalColor.name").value(expectedDefaultTrimCompositionDto.getInternalColor().getName()))
+                    .andExpect(jsonPath("$.externalColor.id").value(expectedDefaultTrimCompositionDto.getExternalColor().getId()))
+                    .andExpect(jsonPath("$.externalColor.name").value(expectedDefaultTrimCompositionDto.getExternalColor().getName()));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 trim 요청에 대해서 NotFound로 응답한다.")
+        void withInvalidTrim() throws Exception {
+            //given
+            Long trimId = Long.MAX_VALUE;
+            when(trimService.findDefaultComposition(trimId)).thenThrow(NoSuchTrimException.class);
+
+            //when
+            mockMvc.perform(get("/trim/{trimId}/default-composition-color", trimId))
                     //then
                     .andExpect(status().isNotFound());
         }
