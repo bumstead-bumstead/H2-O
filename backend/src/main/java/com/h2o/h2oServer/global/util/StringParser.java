@@ -10,4 +10,10 @@ public class StringParser {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
     }
+
+    public static String parseToString(List<Long> list) {
+        return list.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+    }
 }
