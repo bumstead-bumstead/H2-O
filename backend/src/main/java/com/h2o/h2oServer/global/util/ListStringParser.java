@@ -15,7 +15,7 @@ public class ListStringParser {
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("입력의 형태가 잘못되었습니다.");
+            throw new IllegalArgumentException("입력 형식이 잘못되었습니다.");
         }
     }
 
