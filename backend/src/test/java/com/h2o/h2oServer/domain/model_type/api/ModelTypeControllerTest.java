@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static com.h2o.h2oServer.domain.model_type.BodyTypeFixture.*;
+import static com.h2o.h2oServer.domain.model_type.BodytypeFixture.*;
 import static com.h2o.h2oServer.domain.model_type.DrivetrainFixture.*;
 import static com.h2o.h2oServer.domain.model_type.PowertrainFixture.*;
 import static org.mockito.Mockito.when;

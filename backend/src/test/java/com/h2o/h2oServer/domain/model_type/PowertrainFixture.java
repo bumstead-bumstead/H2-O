@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PowertrainFixture {
     public static CarPowertrainDto generateCarPowertrainDto() {
-        return CarPowertrainDto.of(generateCarPowerTrainEntities().get(0),
+        return CarPowertrainDto.of(generateCarPowertrainEntities().get(0),
                 generatePowertrainOutputEntity(),
                 generatePowertrainTorqueEntity());
     }

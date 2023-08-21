@@ -1,6 +1,6 @@
 package com.h2o.h2oServer.domain.trim.api;
 
-import com.h2o.h2oServer.domain.model_type.BodyTypeFixture;
+import com.h2o.h2oServer.domain.model_type.BodytypeFixture;
 import com.h2o.h2oServer.domain.model_type.DrivetrainFixture;
 import com.h2o.h2oServer.domain.model_type.PowertrainFixture;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
@@ -180,7 +180,7 @@ class TrimControllerTest {
 
             DefaultTrimCompositionDto expectedDefaultTrimCompositionDto = DefaultTrimCompositionDto.builder()
                     .powertrain(PowertrainFixture.generateCarPowertrainDto())
-                    .bodytype(BodyTypeFixture.generateCarBodytypeDto())
+                    .bodytype(BodytypeFixture.generateCarBodytypeDto())
                     .drivetrain(DrivetrainFixture.generateCarDrivetrainDto())
                     .internalColor(InternalColorFixture.generateInternalColorDtos().get(0))
                     .externalColor(ExternalColorFixture.generateExternalColorDtos().get(0))
