@@ -26,14 +26,14 @@ import com.h2o.h2oServer.domain.quotation.mapper.QuotationMapper;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
 import com.h2o.h2oServer.domain.trim.mapper.ExternalColorMapper;
 import com.h2o.h2oServer.domain.trim.mapper.TrimMapper;
-import com.h2o.h2oServer.global.util.StringParser;
+import com.h2o.h2oServer.global.util.ListStringParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.h2o.h2oServer.global.util.StringParser.*;
+import static com.h2o.h2oServer.global.util.ListStringParser.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,8 +54,8 @@ public class QuotationService {
 
     public QuotationCountDto findNumberOfIdenticalQuotations(QuotationRequestDto quotationRequestDto) {
         QuotationDto quotationDto = QuotationDto.of(quotationRequestDto);
-        String optionCombination = StringParser.parseToString(quotationRequestDto.getOptionIds());
-        String packageCombination = StringParser.parseToString(quotationRequestDto.getPackageIds());
+        String optionCombination = ListStringParser.parseToString(quotationRequestDto.getOptionIds());
+        String packageCombination = ListStringParser.parseToString(quotationRequestDto.getPackageIds());
 
         return QuotationCountDto.builder()
                 .salesCount(quotationMapper.findIdenticalQuotations(quotationDto,
