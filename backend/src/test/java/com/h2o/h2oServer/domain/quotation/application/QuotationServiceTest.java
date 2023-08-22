@@ -42,6 +42,7 @@ class QuotationServiceTest {
     private static PackageMapper packageMapper;
     private static QuotationService quotationService;
     private static ExternalColorMapper externalColorMapper;
+    private static CosineSimilarityCalculator cosineSimilarityCalculator;
     private static SoftAssertions softly;
 
     @BeforeAll
@@ -55,6 +56,8 @@ class QuotationServiceTest {
         optionMapper = Mockito.mock(OptionMapper.class);
         packageMapper = Mockito.mock(PackageMapper.class);
         externalColorMapper = Mockito.mock(ExternalColorMapper.class);
+        cosineSimilarityCalculator = Mockito.mock(CosineSimilarityCalculator.class);
+
         quotationService = new QuotationService(quotationMapper,
                 carMapper,
                 trimMapper,
@@ -63,7 +66,8 @@ class QuotationServiceTest {
                 drivetrainMapper,
                 optionMapper,
                 packageMapper,
-                externalColorMapper);
+                externalColorMapper,
+                cosineSimilarityCalculator);
         softly = new SoftAssertions();
     }
 

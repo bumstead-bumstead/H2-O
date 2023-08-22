@@ -53,6 +53,7 @@ public class QuotationService {
     private final OptionMapper optionMapper;
     private final PackageMapper packageMapper;
     private final ExternalColorMapper externalColorMapper;
+    private final CosineSimilarityCalculator cosineSimilarityCalculator;
 
     public List<SimilarQuotationDto> findSimilarQuotations(QuotationRequestDto quotationRequestDto) {
 
@@ -84,7 +85,7 @@ public class QuotationService {
             collectHashTagsOfPackages(packageIds, hashTagCount);
 
             //유사도 계산 후 queue에 추가
-            double similarity = CosineSimilarityCalculator.calculateCosineSimilarity(requestHashTagCount, hashTagCount);
+            double similarity = cosineSimilarityCalculator.calculateCosineSimilarity(requestHashTagCount, hashTagCount);
 
             if (similarity < SIMILARITY_LOWER_BOUND || similarity > SIMILARITY_UPPER_BOUND) {
                 continue;
