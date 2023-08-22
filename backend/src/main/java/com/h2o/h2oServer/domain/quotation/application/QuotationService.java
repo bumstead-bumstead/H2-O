@@ -18,10 +18,7 @@ import com.h2o.h2oServer.domain.option.exception.NoSuchOptionException;
 import com.h2o.h2oServer.domain.option.mapper.OptionMapper;
 import com.h2o.h2oServer.domain.optionPackage.exception.NoSuchPackageException;
 import com.h2o.h2oServer.domain.optionPackage.mapper.PackageMapper;
-import com.h2o.h2oServer.domain.quotation.dto.QuotationRequestDto;
-import com.h2o.h2oServer.domain.quotation.dto.QuotationResponseDto;
-import com.h2o.h2oServer.domain.quotation.dto.QuotationDto;
-import com.h2o.h2oServer.domain.quotation.dto.SimilarQuotationDto;
+import com.h2o.h2oServer.domain.quotation.dto.*;
 import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationEntity;
 import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationEntity;
 import com.h2o.h2oServer.domain.quotation.entity.ReleaseEntity;
@@ -29,18 +26,22 @@ import com.h2o.h2oServer.domain.quotation.mapper.QuotationMapper;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
 import com.h2o.h2oServer.domain.trim.mapper.ExternalColorMapper;
 import com.h2o.h2oServer.domain.trim.mapper.TrimMapper;
+import com.h2o.h2oServer.global.util.ListStringParser;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static com.h2o.h2oServer.global.util.StringParser.*;
+import static com.h2o.h2oServer.global.util.ListStringParser.*;
 
 @Service
 @RequiredArgsConstructor
 public class QuotationService {
-    public static final double SIMILARITY_LOWER_BOUND = 0.2;
+
+    private static final double SIMILARITY_LOWER_BOUND = 0.2;
     public static final double SIMILARITY_UPPER_BOUND = 0.9;
     public static final int SIDE_IMAGE_INDEX = 12;
 
@@ -55,8 +56,20 @@ public class QuotationService {
     private final ExternalColorMapper externalColorMapper;
     private final CosineSimilarityCalculator cosineSimilarityCalculator;
 
-    public List<SimilarQuotationDto> findSimilarQuotations(QuotationRequestDto quotationRequestDto) {
+    public QuotationCountDto findNumberOfIdenticalQuotations(QuotationRequestDto quotationRequestDto) {
+        QuotationDto quotationDto = QuotationDto.of(quotationRequestDto);
+        String optionCombination = ListStringParser.parseToString(quotationRequestDto.getOptionIds());
+        String packageCombination = ListStringParser.parseToString(quotationRequestDto.getPackageIds());
 
+        return QuotationCountDto.builder()
+                .salesCount(quotationMapper.findIdenticalQuotations(quotationDto,
+                        optionCombination,
+                        packageCombination)
+                        .size())
+                .build();
+    }
+
+    public List<SimilarQuotationDto> findSimilarQuotations(QuotationRequestDto quotationRequestDto) {
         //1. 요청된 견적의 해시태그 벡터 초기화
         Map<HashTag, Integer> requestHashTagCount = new HashMap<>();
 
@@ -98,6 +111,10 @@ public class QuotationService {
 
         //4. entity to DTO 변환
         for (int index = 0; index < 4; index++) {
+            if (similarityQueue.isEmpty()) {
+                break;
+            }
+
             ReleaseEntity releaseEntity = similarityQueue.poll().getKey();
 
             String powertrainName = powertrainMapper.findById(releaseEntity.getPowertrainId()).getName();
@@ -255,5 +272,4 @@ public class QuotationService {
                     throw new NoSuchOptionException();
                 });
     }
-
 }

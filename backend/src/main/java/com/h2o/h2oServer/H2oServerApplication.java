@@ -3,6 +3,8 @@ package com.h2o.h2oServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+@EnableCaching
 public class H2oServerApplication {
 
 	public static void main(String[] args) {
@@ -21,3 +24,4 @@ public class H2oServerApplication {
 		return ResponseEntity.ok("pong");
 	}
 }
+
