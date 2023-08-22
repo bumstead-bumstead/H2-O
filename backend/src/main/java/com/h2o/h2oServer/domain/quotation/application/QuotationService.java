@@ -187,10 +187,9 @@ public class QuotationService {
 
     @Transactional
     public QuotationResponseDto saveQuotation(QuotationRequestDto quotationRequestDto) {
-        Long quotationId = insertIntoQuotation(quotationRequestDto);
-
         validateQuotationRequest(quotationRequestDto);
 
+        Long quotationId = insertIntoQuotation(quotationRequestDto);
         insertIntoOptionQuotation(quotationRequestDto.getOptionIds(), quotationId);
         insertIntoPackageQuotation(quotationRequestDto.getPackageIds(), quotationId);
 
@@ -198,6 +197,8 @@ public class QuotationService {
     }
 
     private void insertIntoOptionQuotation(List<Long> optionIds, Long quotationId) {
+        if (optionIds.isEmpty()) return;
+
         OptionQuotationEntity optionQuotationEntity = OptionQuotationEntity.builder()
                 .quotationId(quotationId)
                 .optionIds(optionIds)
@@ -207,6 +208,8 @@ public class QuotationService {
     }
 
     private void insertIntoPackageQuotation(List<Long> packageIds, Long quotationId) {
+        if (packageIds.isEmpty()) return;
+
         PackageQuotationEntity packageQuotationEntity = PackageQuotationEntity.builder()
                 .quotationId(quotationId)
                 .packageIds(packageIds)
