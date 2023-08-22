@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Builder
 @EqualsAndHashCode
-public class OptionQuotationCreationDto {
+public class OptionQuotationEntity {
     private Long quotationId;
     private List<Long> optionIds;
 }

@@ -8,7 +8,7 @@
         values (#{carId}, #{trimId}, #{powertrainId}, #{bodytypeId}, #{drivetrainId}, #{internalColorId}, #{externalColorId});
     </insert>
     
-    <insert id="saveOptionQuotation" parameterType="OptionQuotationCreationDto">
+    <insert id="saveOptionQuotation" parameterType="OptionQuotationEntity">
         insert into options_quotation(quotation_id, option_id)
         values
         <foreach collection="optionIds" item="optionId" separator=",">
@@ -16,7 +16,7 @@
         </foreach>
     </insert>
 
-    <insert id="savePackageQuotation" parameterType="PackageQuotationCreationDto">
+    <insert id="savePackageQuotation" parameterType="PackageQuotationEntity">
         insert into package_quotation(quotation_id, package_id)
         values
         <foreach collection="packageIds" item="packageId" separator=",">

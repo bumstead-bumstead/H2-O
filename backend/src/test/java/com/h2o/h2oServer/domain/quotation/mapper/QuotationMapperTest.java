@@ -2,8 +2,8 @@ package com.h2o.h2oServer.domain.quotation.mapper;
 
 import com.h2o.h2oServer.domain.quotation.dto.QuotationDto;
 import com.h2o.h2oServer.domain.quotation.dto.QuotationRequestDto;
-import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationCreationDto;
-import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationCreationDto;
+import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationEntity;
+import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationEntity;
 import com.h2o.h2oServer.domain.quotation.entity.ReleaseEntity;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,13 +58,13 @@ class QuotationMapperTest {
         @DisplayName("옵션 ID 리스트를 테이블에 저장하면 리스트의 개수만큼 레코드가 생성된다.")
         void saveOptionQuotation() {
             //given
-            OptionQuotationCreationDto optionQuotationCreationDto = OptionQuotationCreationDto.builder()
+            OptionQuotationEntity optionQuotationEntity = OptionQuotationEntity.builder()
                     .quotationId(1L)
                     .optionIds(List.of(2L, 3L, 4L))
                     .build();
 
             //when
-            quotationMapper.saveOptionQuotation(optionQuotationCreationDto);
+            quotationMapper.saveOptionQuotation(optionQuotationEntity);
 
             //then
             softly.assertThat(quotationMapper.countOptionQuotation())
@@ -75,13 +75,13 @@ class QuotationMapperTest {
         @DisplayName("패키지 ID 리스트를 테이블에 저장하면 리스트의 개수만큼 레코드가 생성된다.")
         void savePackageQuotation() {
             //given
-            PackageQuotationCreationDto packageQuotationCreationDto = PackageQuotationCreationDto.builder()
+            PackageQuotationEntity packageQuotationEntity = PackageQuotationEntity.builder()
                     .quotationId(1L)
                     .packageIds(List.of(5L, 6L))
                     .build();
 
             //when
-            quotationMapper.savePackageQuotation(packageQuotationCreationDto);
+            quotationMapper.savePackageQuotation(packageQuotationEntity);
 
             //then
             softly.assertThat(quotationMapper.countPackageQuotation())

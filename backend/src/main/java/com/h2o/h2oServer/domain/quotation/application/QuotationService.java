@@ -19,8 +19,8 @@ import com.h2o.h2oServer.domain.option.mapper.OptionMapper;
 import com.h2o.h2oServer.domain.optionPackage.exception.NoSuchPackageException;
 import com.h2o.h2oServer.domain.optionPackage.mapper.PackageMapper;
 import com.h2o.h2oServer.domain.quotation.dto.*;
-import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationCreationDto;
-import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationCreationDto;
+import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationEntity;
+import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationEntity;
 import com.h2o.h2oServer.domain.quotation.entity.ReleaseEntity;
 import com.h2o.h2oServer.domain.quotation.mapper.QuotationMapper;
 import com.h2o.h2oServer.domain.trim.Exception.NoSuchTrimException;
@@ -197,23 +197,23 @@ public class QuotationService {
     private void insertIntoOptionQuotation(List<Long> optionIds, Long quotationId) {
         if (optionIds.isEmpty()) return;
 
-        OptionQuotationCreationDto optionQuotationCreationDto = OptionQuotationCreationDto.builder()
+        OptionQuotationEntity optionQuotationEntity = OptionQuotationEntity.builder()
                 .quotationId(quotationId)
                 .optionIds(optionIds)
                 .build();
 
-        quotationMapper.saveOptionQuotation(optionQuotationCreationDto);
+        quotationMapper.saveOptionQuotation(optionQuotationEntity);
     }
 
     private void insertIntoPackageQuotation(List<Long> packageIds, Long quotationId) {
         if (packageIds.isEmpty()) return;
 
-        PackageQuotationCreationDto packageQuotationCreationDto = PackageQuotationCreationDto.builder()
+        PackageQuotationEntity packageQuotationEntity = PackageQuotationEntity.builder()
                 .quotationId(quotationId)
                 .packageIds(packageIds)
                 .build();
 
-        quotationMapper.savePackageQuotation(packageQuotationCreationDto);
+        quotationMapper.savePackageQuotation(packageQuotationEntity);
     }
 
     private Long insertIntoQuotation(QuotationRequestDto quotationRequestDto) {

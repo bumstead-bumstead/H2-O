@@ -1,8 +1,8 @@
 package com.h2o.h2oServer.domain.quotation.mapper;
 
 import com.h2o.h2oServer.domain.quotation.dto.QuotationDto;
-import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationCreationDto;
-import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationCreationDto;
+import com.h2o.h2oServer.domain.quotation.entity.OptionQuotationEntity;
+import com.h2o.h2oServer.domain.quotation.entity.PackageQuotationEntity;
 
 import com.h2o.h2oServer.domain.quotation.entity.ReleaseEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,9 +13,9 @@ import java.util.List;
 public interface QuotationMapper {
     void saveQuotation(QuotationDto quotationDTO);
 
-    void saveOptionQuotation(OptionQuotationCreationDto optionQuotationCreationDto);
+    void saveOptionQuotation(OptionQuotationEntity optionQuotationEntity);
 
-    void savePackageQuotation(PackageQuotationCreationDto packageQuotationCreationDto);
+    void savePackageQuotation(PackageQuotationEntity packageQuotationEntity);
 
     long countQuotation();
 
