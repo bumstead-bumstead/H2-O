@@ -15,7 +15,7 @@
         where options.id = #{optionId}
     </select>
 
-    <select id="findHashTag" resultType="HashTagEntity">
+    <select id="findHashTag" resultType="HashTagEntity" useCache="true">
         select hashtag.name
         from options
                  join options_hashtag on options.id = options_hashtag.option_id

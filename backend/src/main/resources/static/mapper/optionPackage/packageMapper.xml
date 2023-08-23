@@ -9,7 +9,7 @@
         where trims_package.trim_id = #{trimId} and trims_package.package_id = #{packageId}
     </select>
 
-    <select id="findHashTag" resultType="HashTagEntity">
+    <select id="findHashTag" resultType="HashTagEntity" useCache="true">
         select hashtag.name
         from package
                  join package_hashtag on package.id = package_hashtag.package_id
