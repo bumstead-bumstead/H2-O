@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.h2o.h2oServer.domain.option.mapper.OptionMapper">
+    <cache readOnly="true"/>
     <select id="findOptionDetails" resultType="OptionDetailsEntity">
         select name, image, description, category, use_count, choice_ratio, price, option_type
         from options
@@ -15,7 +16,7 @@
         where options.id = #{optionId}
     </select>
 
-    <select id="findHashTag" resultType="HashTagEntity" useCache="true">
+    <select id="findHashTag" resultType="HashTagEntity">
         select hashtag.name
         from options
                  join options_hashtag on options.id = options_hashtag.option_id
@@ -28,5 +29,4 @@
         FROM options
         WHERE id = #{id}
     </select>
-
 </mapper>
