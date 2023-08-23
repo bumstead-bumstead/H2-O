@@ -11,6 +11,8 @@ import java.io.Serializable;
 public class OptionEntity implements Serializable {
     private String name;
     private String image;
+    private String pcImage;
+    private String mobileImage;
     private String description;
     private OptionCategory category;
     private Float useCount;

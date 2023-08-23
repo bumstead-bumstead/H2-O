@@ -22,6 +22,8 @@ public class OptionDto {
     private String category;
     private List<String> hashTags;
     private String image;
+    private String pcImage;
+    private String mobileImage;
     private String description;
     private Integer useCount;
     private boolean containsHmgData;
@@ -41,6 +43,8 @@ public class OptionDto {
                         .map(HashTag::getLabel)
                         .collect(Collectors.toList()))
                 .image(optionEntity.getImage())
+                .pcImage(optionEntity.getPcImage())
+                .mobileImage(optionEntity.getMobileImage())
                 .description(optionEntity.getDescription())
                 .containsHmgData(containsHmgData(optionEntity))
                 .build();

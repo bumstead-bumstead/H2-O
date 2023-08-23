@@ -19,10 +19,3 @@ mybatis:
 
 server:
   port: 8080
-
-logging:
-  level:
-    mybatis: off
-  pattern:
-    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5p] %logger{15} - %msg%n"
-    file: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5p] %logger{15} - %msg%n"
