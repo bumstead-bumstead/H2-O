@@ -192,11 +192,12 @@ class QuotationServiceTest {
     @DisplayName("유사 견적 추천 기능 테스트")
     class findSimilarQuotationTest {
 
-        @Test
-        @DisplayName("유사 견적을 추천한다.")
-        void findSimilarQuotation() {
-            //given
-            QuotationRequestDto quotationRequestDto = generateQuotationRequestDto();
+        private QuotationRequestDto quotationRequestDto;
+
+        @BeforeEach
+        void setup() {
+            quotationRequestDto = generateQuotationRequestDto();
+
             when(quotationMapper.findReleaseQuotationWithVolume(quotationRequestDto.getTrimId()))
                     .thenReturn(generateReleaseEntityList());
             when(packageMapper.findHashTag(11L))
@@ -216,6 +217,12 @@ class QuotationServiceTest {
             when(drivetrainMapper.findById(1L)).thenReturn(DrivetrainFixture.generateDrivetrainEntity());
             when(externalColorMapper.findImages(1L)).thenReturn(ImageFixture.generateExternalImageEntityList());
             when(optionMapper.findOptionDetails(anyLong(), anyLong())).thenReturn(Optional.of(OptionFixture.generateOptionDetailsEntity()));
+        }
+
+        @Test
+        @DisplayName("유사 견적을 추천한다.")
+        void findSimilarQuotation() {
+            //given
             when(cosineSimilarityCalculator.calculateCosineSimilarity(anyMap(), anyMap())).thenReturn(0.7);
 
             //when
@@ -233,7 +240,6 @@ class QuotationServiceTest {
         @DisplayName("유사도가 < 20%, > 90%인 경우는 추천하지 않는다.")
         void withSimilarityOutOfBound() {
             //given
-            QuotationRequestDto quotationRequestDto = generateQuotationRequestDto();
 
             when(quotationMapper.findReleaseQuotationWithVolume(quotationRequestDto.getTrimId()))
                     .thenReturn(List.of(
@@ -262,25 +268,8 @@ class QuotationServiceTest {
                                     .powertrainId(1L)
                                     .build()
                     ));
-            when(packageMapper.findHashTag(11L))
-                    .thenReturn(generateHashTagEntities());
-            when(packageMapper.findHashTag(12L))
-                    .thenReturn(generateHashTagEntities(List.of(HashTag.LEISURE, HashTag.LEISURE)));
-            when(optionMapper.findHashTag(8L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.COMMUTE, HashTag.COMFORTABLE)));
-            when(optionMapper.findHashTag(9L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.MALE, HashTag.CHILD_COMMUTE, HashTag.STYLE)));
-            when(optionMapper.findHashTag(10L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.STYLE, HashTag.STYLE, HashTag.COUPLE)));
-            when(optionMapper.findHashTag(11L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.COMMUTE, HashTag.COMFORTABLE)));
             when(optionMapper.findHashTag(12L))
                     .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.COMMUTE, HashTag.COMFORTABLE)));
-            when(powertrainMapper.findById(1L)).thenReturn(PowertrainFixture.generatePowertrainEntity());
-            when(bodytypeMapper.findById(1L)).thenReturn(BodytypeFixture.generateBodytypeEntity());
-            when(drivetrainMapper.findById(1L)).thenReturn(DrivetrainFixture.generateDrivetrainEntity());
-            when(externalColorMapper.findImages(1L)).thenReturn(ImageFixture.generateExternalImageEntityList());
-            when(optionMapper.findOptionDetails(anyLong(), anyLong())).thenReturn(Optional.of(OptionFixture.generateOptionDetailsEntity()));
             when(cosineSimilarityCalculator.calculateCosineSimilarity(anyMap(), anyMap())).thenReturn(0.1);
 
             //when
@@ -294,8 +283,6 @@ class QuotationServiceTest {
         @DisplayName("요청 견적보다 추가 견적이 없는 경우 추천하지 않는다.")
         void withoutAdditionalOptions() {
             //given
-            QuotationRequestDto quotationRequestDto = generateQuotationRequestDto();
-
             when(quotationMapper.findReleaseQuotationWithVolume(quotationRequestDto.getTrimId()))
                     .thenReturn(List.of(
                             ReleaseEntity.builder()
@@ -323,23 +310,6 @@ class QuotationServiceTest {
                                     .powertrainId(1L)
                                     .build()
                     ));
-            when(packageMapper.findHashTag(11L))
-                    .thenReturn(generateHashTagEntities());
-            when(packageMapper.findHashTag(12L))
-                    .thenReturn(generateHashTagEntities(List.of(HashTag.LEISURE, HashTag.LEISURE)));
-            when(optionMapper.findHashTag(8L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.COMMUTE, HashTag.COMFORTABLE)));
-            when(optionMapper.findHashTag(9L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.MALE, HashTag.CHILD_COMMUTE, HashTag.STYLE)));
-            when(optionMapper.findHashTag(10L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.STYLE, HashTag.STYLE, HashTag.COUPLE)));
-            when(optionMapper.findHashTag(11L))
-                    .thenReturn(HashTagFixture.generateHashTagEntities(List.of(HashTag.COMMUTE, HashTag.COMFORTABLE)));
-            when(powertrainMapper.findById(1L)).thenReturn(PowertrainFixture.generatePowertrainEntity());
-            when(bodytypeMapper.findById(1L)).thenReturn(BodytypeFixture.generateBodytypeEntity());
-            when(drivetrainMapper.findById(1L)).thenReturn(DrivetrainFixture.generateDrivetrainEntity());
-            when(externalColorMapper.findImages(1L)).thenReturn(ImageFixture.generateExternalImageEntityList());
-            when(optionMapper.findOptionDetails(anyLong(), anyLong())).thenReturn(Optional.of(OptionFixture.generateOptionDetailsEntity()));
             when(cosineSimilarityCalculator.calculateCosineSimilarity(anyMap(), anyMap())).thenReturn(0.7);
 
             //when
