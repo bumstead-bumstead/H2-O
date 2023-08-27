@@ -3,10 +3,8 @@ package com.h2o.h2oServer.domain.option.mapper;
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
 import com.h2o.h2oServer.domain.option.entity.OptionDetailsEntity;
 import com.h2o.h2oServer.domain.option.entity.OptionEntity;
-import com.h2o.h2oServer.domain.options.dto.PageRangeDto;
-import com.h2o.h2oServer.domain.options.entity.TrimDefaultOptionEntity;
-import com.h2o.h2oServer.domain.options.entity.TrimExtraOptionEntity;
-import com.h2o.h2oServer.domain.options.enums.OptionType;
+import com.h2o.h2oServer.domain.option.entity.TrimDefaultOptionEntity;
+import com.h2o.h2oServer.domain.option.entity.TrimExtraOptionEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

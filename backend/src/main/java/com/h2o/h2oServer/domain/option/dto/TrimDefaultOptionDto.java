@@ -1,7 +1,7 @@
-package com.h2o.h2oServer.domain.options.dto;
+package com.h2o.h2oServer.domain.option.dto;
 
 import com.h2o.h2oServer.domain.option.entity.HashTagEntity;
-import com.h2o.h2oServer.domain.options.entity.TrimDefaultOptionEntity;
+import com.h2o.h2oServer.domain.option.entity.TrimDefaultOptionEntity;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

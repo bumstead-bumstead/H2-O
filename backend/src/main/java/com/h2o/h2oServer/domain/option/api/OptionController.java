@@ -2,7 +2,8 @@ package com.h2o.h2oServer.domain.option.api;
 
 import com.h2o.h2oServer.domain.option.application.OptionService;
 import com.h2o.h2oServer.domain.option.dto.OptionDetailsDto;
-import com.h2o.h2oServer.domain.options.dto.*;
+import com.h2o.h2oServer.domain.option.dto.TrimDefaultOptionDto;
+import com.h2o.h2oServer.domain.option.dto.TrimExtraOptionDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
