@@ -23,26 +23,14 @@ public interface OptionMapper {
 
     List<TrimExtraOptionEntity> findTrimPackages(Long trimId);
 
-    List<TrimExtraOptionEntity> findTrimPackagesWithRange(@Param("trimId") Long trimId,
-                                                          @Param("pageRange") PageRangeDto pageRange);
-
     List<TrimExtraOptionEntity> findTrimExtraOptions(Long trimId);
-
-    List<TrimExtraOptionEntity> findTrimExtraOptionsWithRange(@Param("trimId") Long trimId,
-                                                              @Param("pageRange") PageRangeDto pageRange);
 
     List<TrimDefaultOptionEntity> findTrimDefaultOptions(Long trimId);
 
-    List<TrimDefaultOptionEntity> findTrimDefaultOptionsWithRange(@Param("trimId") Long trimId,
-                                                                  @Param("pageRange") PageRangeDto pageRange);
-
+    //todo : 중복 제거. package, option
     List<HashTagEntity> findPackageHashTags(Long packageId);
 
     List<HashTagEntity> findOptionHashTag(Long optionId);
-
-    Long findTrimPackageSize(Long trimId);
-
-    Long findTrimOptionSize(@Param("trimId") Long trimId, @Param("optionType") OptionType optionType);
 
     Boolean checkIfOptionExists(Long id);
 }

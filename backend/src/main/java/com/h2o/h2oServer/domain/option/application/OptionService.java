@@ -48,20 +48,8 @@ public class OptionService {
         return addPackages(extraOptionEntities);
     }
 
-    public List<TrimExtraOptionDto> findTrimPackages(Long trimId, PageRangeDto pageRangeDto) {
-        List<TrimExtraOptionEntity> extraOptionEntities = optionMapper.findTrimPackagesWithRange(trimId, pageRangeDto);
-        Validator.validateExistenceOfOptions(extraOptionEntities);
-        return addPackages(extraOptionEntities);
-    }
-
     public List<TrimExtraOptionDto> findTrimExtraOptions(Long trimId) {
         List<TrimExtraOptionEntity> extraOptionEntities = optionMapper.findTrimExtraOptions(trimId);
-        Validator.validateExistenceOfOptions(extraOptionEntities);
-        return addExtraOptions(extraOptionEntities);
-    }
-
-    public List<TrimExtraOptionDto> findTrimExtraOptions(Long trimId, PageRangeDto pageRangeDto) {
-        List<TrimExtraOptionEntity> extraOptionEntities = optionMapper.findTrimExtraOptionsWithRange(trimId, pageRangeDto);
         Validator.validateExistenceOfOptions(extraOptionEntities);
         return addExtraOptions(extraOptionEntities);
     }
@@ -70,22 +58,6 @@ public class OptionService {
         List<TrimDefaultOptionEntity> defaultOptionEntities = optionMapper.findTrimDefaultOptions(trimId);
         Validator.validateExistenceOfOptions(defaultOptionEntities);
         return addDefaultOptions(defaultOptionEntities);
-    }
-
-    public List<TrimDefaultOptionDto> findTrimDefaultOptions(Long trimId, PageRangeDto pageRangeDto) {
-        List<TrimDefaultOptionEntity> defaultOptionEntities = optionMapper.findTrimDefaultOptionsWithRange(trimId, pageRangeDto);
-        Validator.validateExistenceOfOptions(defaultOptionEntities);
-        return addDefaultOptions(defaultOptionEntities);
-    }
-
-    public ExtraOptionSizeDto findTrimExtraOptionSize(Long trimId) {
-        return ExtraOptionSizeDto.of(
-                optionMapper.findTrimPackageSize(trimId), optionMapper.findTrimOptionSize(trimId, OptionType.EXTRA)
-        );
-    }
-
-    public DefaultOptionSizeDto findTrimDefaultOptionSize(Long trimId) {
-        return DefaultOptionSizeDto.of(optionMapper.findTrimOptionSize(trimId, OptionType.DEFAULT));
     }
 
     private List<TrimExtraOptionDto> addPackages(List<TrimExtraOptionEntity> extraOptionEntities) {

@@ -180,52 +180,6 @@ class OptionMapperTest {
         softly.assertAll();
     }
 
-    @Test
-    @DisplayName("트림의 ID로 해당 트림의 기본 옵션의 개수를 조회할 수 있다.")
-    @Sql("classpath:db/options/option-data.sql")
-    void findTrimDefaultOptionOffsetRangeWhenExist() {
-        //given
-        Long trimId1 = 1L;
-        Long trimId2 = 2L;
-
-        //when
-        Long countDefaultOptions1 = optionMapper.findTrimOptionSize(trimId1, OptionType.DEFAULT);
-        Long countDefaultOptions2 = optionMapper.findTrimOptionSize(trimId2, OptionType.DEFAULT);
-
-        //then
-        softly.assertThat(countDefaultOptions1).as("트림에 포함되는 기본 옵션이 있다.")
-                .isEqualTo(5L);
-        softly.assertThat(countDefaultOptions2).as("트림에 포함되는 기본 옵션이 없다.")
-                .isEqualTo(0L);
-        softly.assertAll();
-    }
-
-    @Test
-    @DisplayName("트림의 ID와 기본 옵션의 범위로 조회하면 특정 위치에서 특정 개수만큼 기본 옵션을 조회한다.")
-    @Sql("classpath:db/options/option-data.sql")
-    void findTrimDefaultOptionsWithRange() {
-        //given
-        Long trimId = 1L;
-        PageRangeDto optionSizeDto = PageRangeDto.of(2L, 2L);
-
-        TrimDefaultOptionEntity entity1 = createTrimDefaultOptionEntity(
-                5L, "option5", "img5", OptionCategory.EXTERIOR, 20.0f
-        );
-        TrimDefaultOptionEntity entity2 = createTrimDefaultOptionEntity(
-                7L, "option7", "img7", OptionCategory.EXTERIOR, 20.0f
-        );
-
-        //when
-        List<TrimDefaultOptionEntity> options = optionMapper.findTrimDefaultOptionsWithRange(trimId, optionSizeDto);
-
-        //then
-        softly.assertThat(options).as("기본 옵션 2개를 조회한다.")
-                .hasSize(2);
-        softly.assertThat(options).as("옵션은 특정 위치에서 특정 개수만큼 조회된다.")
-                .containsExactly(entity1, entity2);
-        softly.assertAll();
-    }
-
     private TrimExtraOptionEntity createTrimExtraOptionEntity(
             long id, String name, String img, OptionCategory category, int price, float choiceRatio
     ) {
