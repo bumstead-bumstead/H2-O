@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,8 @@ public class TrimDefaultOptionDto {
                         .map(hashTagEntity -> hashTagEntity.getName().getLabel())
                         .collect(Collectors.toList())
         );
+
+        Collections.sort(trimDefaultOptionDto.hashTags);
 
         if (trimDefaultOptionEntity.getUseCount() != null || trimDefaultOptionEntity.getChoiceRatio() != null) {
             trimDefaultOptionDto.containsHmgData = true;

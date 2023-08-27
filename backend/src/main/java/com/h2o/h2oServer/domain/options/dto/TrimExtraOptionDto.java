@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,8 @@ public class TrimExtraOptionDto {
                         .map(hashTagEntity -> hashTagEntity.getName().getLabel())
                         .collect(Collectors.toList())
         );
+
+        Collections.sort(trimExtraOptionDto.hashTags);
 
         Float choiceRatio = trimExtraOptionEntity.getChoiceRatio();
         if (choiceRatio != null) {
