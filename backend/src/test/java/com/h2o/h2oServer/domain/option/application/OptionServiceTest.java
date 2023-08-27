@@ -65,6 +65,7 @@ class OptionServiceTest {
                     .isEqualTo(OptionStatisticsDto.of(0.3f, 13));
             softly.assertAll();
         }
+
         @Test
         @DisplayName("존재하지 않는 option에 대한 요청인 경우 NoSuchOptionException을 발생시킨다.")
         void findDetailedOptionInformationNotExists() {
@@ -79,6 +80,7 @@ class OptionServiceTest {
                     .isInstanceOf(NoSuchOptionException.class);
         }
     }
+
     @Nested
     @DisplayName("옵션 정보 반환 테스트")
     class findOptionInformationTest {
