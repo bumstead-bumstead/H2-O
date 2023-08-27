@@ -7,6 +7,7 @@ import com.h2o.h2oServer.domain.option.dto.OptionStatisticsDto;
 import com.h2o.h2oServer.domain.option.entity.enums.OptionCategory;
 import com.h2o.h2oServer.domain.option.exception.NoSuchOptionException;
 import com.h2o.h2oServer.domain.option.mapper.OptionMapper;
+import com.h2o.h2oServer.domain.optionPackage.mapper.PackageMapper;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -23,12 +24,14 @@ import static org.mockito.Mockito.when;
 class OptionServiceTest {
     private static OptionMapper optionMapper;
     private static OptionService optionService;
+    private static PackageMapper packageMapper;
     private static SoftAssertions softly;
 
     @BeforeAll
     static void beforeAll() {
         optionMapper = Mockito.mock(OptionMapper.class);
-        optionService = new OptionService(optionMapper);
+        packageMapper = Mockito.mock(PackageMapper.class);
+        optionService = new OptionService(optionMapper, packageMapper);
         softly = new SoftAssertions();
     }
 

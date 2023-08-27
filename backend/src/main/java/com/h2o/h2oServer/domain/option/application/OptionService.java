@@ -7,10 +7,10 @@ import com.h2o.h2oServer.domain.option.entity.OptionDetailsEntity;
 import com.h2o.h2oServer.domain.option.entity.OptionEntity;
 import com.h2o.h2oServer.domain.option.exception.NoSuchOptionException;
 import com.h2o.h2oServer.domain.option.mapper.OptionMapper;
+import com.h2o.h2oServer.domain.optionPackage.mapper.PackageMapper;
 import com.h2o.h2oServer.domain.options.dto.*;
 import com.h2o.h2oServer.domain.options.entity.TrimDefaultOptionEntity;
 import com.h2o.h2oServer.domain.options.entity.TrimExtraOptionEntity;
-import com.h2o.h2oServer.domain.options.enums.OptionType;
 import com.h2o.h2oServer.global.util.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ import java.util.List;
 public class OptionService {
 
     private final OptionMapper optionMapper;
+    private final PackageMapper packageMapper;
 
     public OptionDetailsDto findDetailedOptionInformation(Long optionId, Long trimId) {
         OptionDetailsEntity optionDetailsEntity = optionMapper.findOptionDetails(optionId, trimId)
@@ -65,7 +66,7 @@ public class OptionService {
 
         for (TrimExtraOptionEntity extraOptionEntity : extraOptionEntities) {
             Long packageId = extraOptionEntity.getId();
-            List<HashTagEntity> packageHashTags = optionMapper.findPackageHashTags(packageId);
+            List<HashTagEntity> packageHashTags = packageMapper.findHashTag(packageId);
 
             TrimExtraOptionDto trimExtraOptionDto = TrimExtraOptionDto.of(true, extraOptionEntity, packageHashTags);
 
@@ -82,7 +83,7 @@ public class OptionService {
 
         for (TrimExtraOptionEntity extraOptionEntity : extraOptionEntities) {
             Long optionId = extraOptionEntity.getId();
-            List<HashTagEntity> optionHashTags = optionMapper.findOptionHashTag(optionId);
+            List<HashTagEntity> optionHashTags = optionMapper.findHashTag(optionId);
 
             TrimExtraOptionDto trimExtraOptionDto = TrimExtraOptionDto.of(false, extraOptionEntity, optionHashTags);
 
@@ -99,7 +100,7 @@ public class OptionService {
 
         for (TrimDefaultOptionEntity defaultOptionEntity : defaultOptionEntities) {
             Long optionId = defaultOptionEntity.getId();
-            List<HashTagEntity> optionHashTags = optionMapper.findOptionHashTag(optionId);
+            List<HashTagEntity> optionHashTags = optionMapper.findHashTag(optionId);
 
             TrimDefaultOptionDto trimDefaultOptionDto = TrimDefaultOptionDto.of(defaultOptionEntity, optionHashTags);
 

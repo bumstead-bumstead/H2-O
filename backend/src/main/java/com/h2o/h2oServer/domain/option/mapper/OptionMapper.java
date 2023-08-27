@@ -27,10 +27,5 @@ public interface OptionMapper {
 
     List<TrimDefaultOptionEntity> findTrimDefaultOptions(Long trimId);
 
-    //todo : 중복 제거. package, option
-    List<HashTagEntity> findPackageHashTags(Long packageId);
-
-    List<HashTagEntity> findOptionHashTag(Long optionId);
-
     Boolean checkIfOptionExists(Long id);
 }

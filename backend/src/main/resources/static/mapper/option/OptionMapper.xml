@@ -17,11 +17,13 @@
     </select>
 
     <select id="findHashTag" resultType="HashTagEntity">
-        select hashtag.name
-        from options
-                 join options_hashtag on options.id = options_hashtag.option_id
-                 join hashtag on hashtag.id = options_hashtag.hashtag_id
-        where options.id = #{optionId}
+        select name
+        from options_hashtag
+                 join hashtag
+                      on options_hashtag.hashtag_id = hashtag.id
+        where option_id = #{optionId}
+        order by hashtag_id
+            limit 5;
     </select>
 
     <select id="findTrimPackages" resultType="TrimExtraOptionEntity">
@@ -49,27 +51,6 @@
                       on trims_options.option_id = options.id
         where trim_id = #{trimId} and option_type = 'default'
         order by option_id;
-    </select>
-
-
-    <select id="findPackageHashTags" resultType="HashTagEntity">
-        select name
-        from package_hashtag
-                 join hashtag
-                      on package_hashtag.hashtag_id = hashtag.id
-        where package_id = #{packageId}
-        order by hashtag_id
-            limit 5;
-    </select>
-
-    <select id="findOptionHashTag" resultType="HashTagEntity">
-        select name
-        from options_hashtag
-                 join hashtag
-                      on options_hashtag.hashtag_id = hashtag.id
-        where option_id = #{optionId}
-        order by hashtag_id
-            limit 5;
     </select>
 
     <select id="checkIfOptionExists" resultType="boolean">
