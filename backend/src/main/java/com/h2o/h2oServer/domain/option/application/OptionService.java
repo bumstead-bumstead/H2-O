@@ -45,22 +45,23 @@ public class OptionService {
     public List<TrimExtraOptionDto> findTrimPackages(Long trimId) {
         List<TrimExtraOptionEntity> extraOptionEntities = optionMapper.findTrimPackages(trimId);
         Validator.validateExistenceOfOptions(extraOptionEntities);
-        return addPackages(extraOptionEntities);
+        
+        return convertPackageEntityToDto(extraOptionEntities);
     }
 
     public List<TrimExtraOptionDto> findTrimExtraOptions(Long trimId) {
         List<TrimExtraOptionEntity> extraOptionEntities = optionMapper.findTrimExtraOptions(trimId);
         Validator.validateExistenceOfOptions(extraOptionEntities);
-        return addExtraOptions(extraOptionEntities);
+        return convertExtraOptionEntityToDto(extraOptionEntities);
     }
 
     public List<TrimDefaultOptionDto> findTrimDefaultOptions(Long trimId) {
         List<TrimDefaultOptionEntity> defaultOptionEntities = optionMapper.findTrimDefaultOptions(trimId);
         Validator.validateExistenceOfOptions(defaultOptionEntities);
-        return addDefaultOptions(defaultOptionEntities);
+        return convertDefaultOptionToDto(defaultOptionEntities);
     }
 
-    private List<TrimExtraOptionDto> addPackages(List<TrimExtraOptionEntity> extraOptionEntities) {
+    private List<TrimExtraOptionDto> convertPackageEntityToDto(List<TrimExtraOptionEntity> extraOptionEntities) {
         return extraOptionEntities.stream()
                 .map(extraOptionEntity -> {
                     List<HashTagEntity> packageHashTags = packageMapper.findHashTag(extraOptionEntity.getId());
@@ -69,7 +70,7 @@ public class OptionService {
                 .collect(Collectors.toList());
     }
 
-    private List<TrimExtraOptionDto> addExtraOptions(List<TrimExtraOptionEntity> extraOptionEntities) {
+    private List<TrimExtraOptionDto> convertExtraOptionEntityToDto(List<TrimExtraOptionEntity> extraOptionEntities) {
         return extraOptionEntities.stream()
                 .map(extraOptionEntity -> {
                     List<HashTagEntity> packageHashTags = optionMapper.findHashTag(extraOptionEntity.getId());
@@ -78,7 +79,7 @@ public class OptionService {
                 .collect(Collectors.toList());
     }
 
-    private List<TrimDefaultOptionDto> addDefaultOptions(List<TrimDefaultOptionEntity> defaultOptionEntities) {
+    private List<TrimDefaultOptionDto> convertDefaultOptionToDto(List<TrimDefaultOptionEntity> defaultOptionEntities) {
         return defaultOptionEntities.stream()
                 .map(defaultOptionEntity -> {
                     List<HashTagEntity> optionHashTags = optionMapper.findHashTag(defaultOptionEntity.getId());
